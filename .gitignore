@@ -1,0 +1,6 @@
+site.zip
+site-v1.zip
+__pycache__/
+.env
+.env.*
+.vercel/
