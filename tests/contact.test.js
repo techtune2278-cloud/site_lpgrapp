@@ -3,7 +3,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { createContactService } = require('../lib/contact-service');
 const NOW = 1700000000000;
-const env = { BREVO_API_KEY: 'mock-key', CONTACT_FROM_EMAIL: 'site@example.org', CONTACT_TO_EMAIL: 'autrices@example.org' };
+const env = { BREVO_API_KEY: 'mock-key', CONTACT_FROM_EMAIL: 'site@example.org', CONTACT_TO_EMAIL: 'auteurs@example.org' };
 const request = (body = {}) => ({
   method: 'POST', headers: { origin: 'https://sitelpgrapp.vercel.app', host: 'sitelpgrapp.vercel.app', 'content-type': 'application/json' }, ip: '127.0.0.1',
   body: { profil: 'Un particulier', nom: 'Camille', email: 'camille@example.org', sujet: 'Une question', message: 'Bonjour, quelle est la prochaine parution ?', consent: true, website: '', startedAt: NOW - 5000, ...body },
@@ -74,4 +74,13 @@ test('status endpoint exposes availability only, never secrets or recipient', as
   assert.deepEqual(response.data, { enabled: true });
   assert.equal(response.headers['Cache-Control'], 'no-store');
   assert.equal((await service({ method: 'DELETE' })).status, 405);
+});
+
+test('professional request preserves city and quote request in the email', async () => {
+  let sent;
+  const service = createContactService({ env, now: () => NOW, fetchImpl: async (_, options) => { sent = JSON.parse(options.body); return accepted(); } });
+  assert.equal((await service(request({ profil: 'Librairie', ville: 'Lannion', devis: true }))).status, 200);
+  assert.match(sent.textContent, /Ville : Lannion/);
+  assert.match(sent.textContent, /Demande de devis : Oui/);
+  assert.equal((await service(request({ ville: 'Une ville\r\nBcc: unwanted' }))).status, 400);
 });

@@ -33,16 +33,21 @@ def buying_help():
     return '<p class="buying-help">Paiement dans SumUp · Plusieurs titres dans un même panier.<br><a href="/livraison/#tarifs">Frais de port</a> · <a href="/livraison/#questions">Questions sur la commande</a></p>'
 
 
-def contact_form():
+def contact_form(professional=False):
     profiles = ['Un particulier', 'Une librairie', 'Une bibliothèque ou médiathèque', 'Un musée ou une maison d’écrivain', 'Une école ou Alliance française', 'Un organisateur de salon', 'Un journaliste', 'Autre']
+    if professional:
+        profiles = ['Librairie', 'Bibliothèque ou médiathèque', 'Musée ou maison d’écrivain', 'Alliance française', 'École', 'Salon ou marché', 'Presse', 'Autre']
+    city = '<label>Ville<input name="ville" maxlength="160" autocomplete="address-level2"></label>' if professional else ''
+    subject = '<input name="sujet" type="hidden" value="Demande professionnelle">' if professional else '<label>Sujet<input name="sujet" required maxlength="160"></label>'
+    quote = '<label class="full contact-consent"><input name="devis" type="checkbox"> <span>Je souhaite un devis</span></label>' if professional else ''
     options = ''.join(f'<option>{escape(p)}</option>' for p in profiles)
     return f'''<form id="contact-form" class="contact-form" action="/api/contact" method="post">
 <label>Vous êtes<select name="profil">{options}</select></label>
-<label>Nom / structure<input name="nom" required maxlength="120" autocomplete="name"></label>
+<label>Nom / structure<input name="nom" required maxlength="120" autocomplete="name"></label>{city}
 <label>Votre e-mail<input name="email" type="email" required maxlength="254" autocomplete="email"></label>
-<label>Sujet<input name="sujet" required maxlength="160"></label>
+{subject}
 <label class="full">Votre message<textarea name="message" rows="6" minlength="10" maxlength="5000" required></textarea></label>
-<div class="contact-trap" aria-hidden="true"><label>Ne pas remplir ce champ<input name="website" tabindex="-1" autocomplete="off"></label></div>
+{quote}<div class="contact-trap" aria-hidden="true"><label>Ne pas remplir ce champ<input name="website" tabindex="-1" autocomplete="off"></label></div>
 <label class="full contact-consent"><input name="consent" type="checkbox" required> <span>J’accepte que les informations saisies soient utilisées pour répondre à ma demande. <a href="/confidentialite/">Confidentialité</a>.</span></label>
 <p class="full muted" id="contact-availability" role="status">Vérification de la disponibilité du formulaire…</p>
 <button class="button primary" type="submit" id="send-message" disabled>Envoyer mon message ↗</button>

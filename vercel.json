@@ -9,6 +9,16 @@
       "source": "/nouvellecollection2025",
       "destination": "/bonus/moliere/",
       "permanent": true
+    },
+    {
+      "source": "/autrices",
+      "destination": "/auteurs/",
+      "permanent": true
+    },
+    {
+      "source": "/agenda",
+      "destination": "/ou-nous-trouver/",
+      "permanent": true
     }
   ]
 }
