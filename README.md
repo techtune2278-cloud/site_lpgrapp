@@ -1,4 +1,4 @@
-# Les plus grands racontés aux plus petits — V1.2.1
+# Les plus grands racontés aux plus petits — V1.3.0
 
 Textes éditoriaux issus du document transmis le 20 octobre 2026, sans résumé. Guide d’installation et correspondance des contenus : MAJ_TEXTES_V1.2.md. Configuration du formulaire : PRIORITE_1.md.
 
@@ -28,4 +28,6 @@ Tests :
 
 Le brouillon reste en noindex ; le domaine actuel utilisé dans les métadonnées est sitelpgrapp.vercel.app, configurable par site_url dans site-settings.json. Les pages légales et les points entre crochets restent à compléter.
 
-Images, bonus et quatrième article : voir IMAGES_ET_BONUS_V1.2.1.md. Les images se déposent dans dist/assets/photos, couvertures et presse. Elles sont détectées à la génération ; les URL cover explicites restent prioritaires.
+Images, bonus et quatrième article : voir IMAGES_ET_BONUS_V1.3.0.md. Les images se déposent dans dist/assets/photos, couvertures et presse. Elles sont détectées à la génération ; les URL cover explicites restent prioritaires.
+
+Mise à jour du 20 octobre : voir MAJ_V1.3.md. Nouveau sélecteur abonnement dans dist/subscription.js et page_helpers.py ; PDF et photo de Nantes inclus. L’Atelier de contenu n’est plus lié dans le pied de page.

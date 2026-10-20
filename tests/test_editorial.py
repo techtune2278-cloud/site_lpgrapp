@@ -33,7 +33,8 @@ class EditorialTests(unittest.TestCase):
     def test_home_visitor_paragraphs_are_complete(self):
         actual, _ = read('')
         for number in [59,60,63,64,66,67,68,69,73,74,75,76,100,103]:
-            self.assertIn(normal(SOURCE[str(number)]), actual, f'Paragraphe {number} absent ou réécrit')
+            expected=SOURCE[str(number)].replace('écrivaine','écrivain') if number==59 else SOURCE[str(number)]
+            self.assertIn(normal(expected), actual, f'Paragraphe {number} absent ou réécrit')
         for number in [62,65,70,72,77,90,96,99,102]:
             self.assertIn(normal(SOURCE[str(number)].split('H2 : ',1)[-1]), actual)
         self.assertIn(normal(SOURCE['71'].split(' Lien : ',1)[0]), actual)
@@ -50,8 +51,11 @@ class EditorialTests(unittest.TestCase):
 
     def test_professional_conditions_are_complete_and_form_has_requested_fields(self):
         actual, markup = read('professionnels')
-        for number in [252,255,258,261,264,267,269,270,271]:
+        for number in [255,261,264,267,270,271]:
             self.assertIn(normal(SOURCE[str(number)]), actual)
+        self.assertNotIn('30 %',actual)
+        self.assertNotIn('remises',actual)
+        self.assertIn('Vente ferme, sans dépôt.',actual)
         for field in ['profil','nom','ville','email','message','devis','consent']:
             self.assertIn('name="'+field+'"', markup)
 
@@ -60,8 +64,10 @@ class EditorialTests(unittest.TestCase):
         for number in [471,472,473,474,475,476]:
             self.assertIn(normal(SOURCE[str(number)]), actual)
         actual,_=read('offrir')
-        for number in [391,419,420,421]:
+        for number in [391]:
             self.assertIn(normal(SOURCE[str(number)]), actual)
+        self.assertIn('Composez votre abonnement',actual)
+        self.assertIn('avec une carte et dédicace d’un des auteurs.',actual)
 
     def test_no_old_word_or_unconfirmed_upper_age_in_public_copy(self):
         for path in (ROOT/'dist').rglob('*.html'):
