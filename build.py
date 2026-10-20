@@ -16,7 +16,7 @@ settings = json.loads((ROOT / 'site-settings.json').read_text(encoding='utf-8-si
 paragraphs = json.loads((ROOT / 'textes-brief.json').read_text(encoding='utf-8'))['paragraphs']
 SUMUP = settings['shop_url']
 SITE_URL = site_url(settings)
-VERSION = '1.4.0'
+VERSION = '1.5.0'
 SERIES = 'Les plus grands racontés aux plus petits'
 
 
@@ -62,13 +62,14 @@ def cards(items):
 def page(path, title, body, description='', active='', extra='', og_description='', structured=None):
     target = OUT / path.strip('/') / 'index.html'
     target.parent.mkdir(parents=True, exist_ok=True)
-    nav = ''.join(f'<a {"aria-current=page" if active==label else ""} href="{url}">{label}</a>' for label, url in [('La collection', '/livres/'), ('Les auteurs', '/auteurs/'), ('Où nous trouver', '/ou-nous-trouver/'), ('Professionnels', '/professionnels/')])
+    nav = ''.join(f'<a {"aria-current=page" if active==label else ""} href="{url}">{label}</a>' for label, url in [('La collection', '/livres/'), ('Abonnement cadeau', '/offrir/#abonnement'), ('Les auteurs', '/auteurs/'), ('Où nous trouver', '/ou-nous-trouver/'), ('Professionnels', '/professionnels/')])
     canonical_path = {'autrices':'auteurs', 'agenda':'ou-nous-trouver','faq':'livraison'}.get(path,path)
     canonical = SITE_URL + ('/' + canonical_path.strip('/') + '/' if canonical_path else '/')
     description = publication.description(path, description, title)
     seo_head, structured = publication.metadata(path, title, description, canonical, structured)
     robots = 'index,follow,max-image-preview:large' if publication.indexable(path) else 'noindex,follow'
     body = public_copy(body)
+    if path in {'professionnels','presse'}:body=body.replace('class="nothomb-quote"', 'class="nothomb-quote quote-centered"')
     analytics = '<script defer src="/_vercel/insights/script.js"></script>' if settings.get('analytics_enabled') else ''
     schema = ''
     if structured:

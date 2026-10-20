@@ -1,6 +1,6 @@
-# Les plus grands racontés aux plus petits — V1.4.0
+# Les plus grands racontés aux plus petits — V1.5.0
 
-Version de publication. Installation, domaine, configuration Brevo, référencement et mises à jour : **DEPLOIEMENT_V1.4.md**.
+Version de publication. Mise à jour des abonnements, photos et librairies : **MAJ_V1.5.md**. Installation, domaine, configuration Brevo, référencement et mises à jour : **DEPLOIEMENT_V1.4.md**.
 
 Le catalogue et les textes restent dans `content.json` et `textes-brief.json`. Le générateur Python produit le HTML complet dans `dist`. Les notes de préparation entre crochets ne sont pas affichées. Les dates manquantes ne bloquent pas le site. Les images locales sont automatiquement optimisées sans toucher aux originaux.
 
