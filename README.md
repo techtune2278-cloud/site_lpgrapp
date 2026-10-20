@@ -1,15 +1,30 @@
-# Les plus grands racontés aux plus petits — V0.1
+# Les plus grands racontés aux plus petits — V1.1.0
 
-Site statique de travail, sans dépendance.
+Site vitrine statique et formulaire serveur Vercel. Les détails de cette mise à jour et les réglages du formulaire sont dans PRIORITE_1.md.
 
-Construction : `python3 build.py`
-Dossier publié : `dist/`
-Vercel : commande de build `python3 build.py`, sortie `dist`.
+## Développement
 
-Le catalogue est dans `content.json`. Remplacer les couvertures via le champ `cover` et les descriptions via `description`. Déposer les images dans `dist/assets/` ou utiliser une URL HTTPS. Le script conserve les fichiers présents dans dist.
+- Catalogue : content.json (descriptions, prix, couvertures, commande_url).
+- Réglages : site-settings.json (boutique, formules, tarifs et audio).
+- Modèles généraux : build.py ; blocs priorité 1 : site_features.py.
+- Style et interactions : dist/style.css et dist/app.js.
+- Fonction Vercel : api/contact.js ; service d’envoi : lib/contact-service.js.
 
-L’atelier est un prototype local avec import/export JSON. Il n’est pas une administration authentifiée et ne publie pas ses modifications. Remplacer content.json par le fichier exporté, puis reconstruire pour intégrer les changements.
+Générer : python build.py (ou python3 selon le poste).
+Voir localement : python -m http.server 8080 --bind 127.0.0.1 --directory dist
+Puis http://127.0.0.1:8080. Le formulaire réel s’essaie sur Vercel : le serveur Python ne lance pas les fonctions Node.
 
-Avant ouverture : réception des images et extraits, liens SumUp par produit et formules, confirmation prix Collector, conditions abonnement/cadeaux, adresse email et formulaire serveur, administration sécurisée, mentions légales/CGV, redirection QR existante, audio Molière, domaine et suppression noindex/robots Disallow. Ajouter canonical, sitemap et données structurées sur le domaine définitif, à partir des disponibilités et offres vérifiées.
+Après modification : générer, git add ., git commit, git push. Le déploiement Vercel utilise dist sans construction automatique. Les fichiers HTML générés sont à conserver dans Git. Ne pas modifier directement dist/content.json ni les index.html générés.
 
-Aucune photo ni citation d’Amélie Nothomb n’est publiée dans cette version.
+## Fonctionnement
+
+Dix liens directs SumUp ; FAQ et livraison ; formulaire prêt à activer avec Brevo ; lecteur Molière prêt à recevoir le fichier. Les offres sans URL dédiée restent des demandes de contact. Sans clé et expéditeur configurés, aucun envoi n’est annoncé. Le lecteur ne s’affiche que si le MP3 existe ou si son URL est renseignée.
+
+Les contenus et droits manquants, les conditions cadeaux/abonnement et les pages légales restent à compléter. Les instructions noindex sont conservées pour le brouillon. L’atelier reste un outil local avec import/export, sans publication directe ni authentification.
+
+## Tests
+
+node --test tests/contact.test.js
+python -m unittest discover -s tests -p "test_*.py"
+
+Les tests d’envoi utilisent un prestataire simulé. Aucun e-mail réel n’est envoyé par les tests.

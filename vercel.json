@@ -3,5 +3,12 @@
   "buildCommand": "",
   "outputDirectory": "dist",
   "cleanUrls": true,
-  "trailingSlash": true
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/nouvellecollection2025",
+      "destination": "/bonus/moliere/",
+      "permanent": true
+    }
+  ]
 }
