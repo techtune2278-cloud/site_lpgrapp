@@ -35,5 +35,10 @@
       "us": "40,00 €"
     }
   ],
-  "bonus_page_url": "https://www.lescompagnonsderoute.com/les-bonus-de-la-collection-lpgrapp"
+  "bonus_page_url": "https://www.lescompagnonsderoute.com/les-bonus-de-la-collection-lpgrapp",
+  "publication_mode": "production",
+  "site_url": "https://sitelpgrapp.vercel.app",
+  "google_site_verification": "",
+  "bing_site_verification": "",
+  "analytics_enabled": false
 }

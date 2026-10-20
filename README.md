@@ -1,33 +1,15 @@
-# Les plus grands racontés aux plus petits — V1.3.0
+# Les plus grands racontés aux plus petits — V1.4.0
 
-Textes éditoriaux issus du document transmis le 20 octobre 2026, sans résumé. Guide d’installation et correspondance des contenus : MAJ_TEXTES_V1.2.md. Configuration du formulaire : PRIORITE_1.md.
+Version de publication. Installation, domaine, configuration Brevo, référencement et mises à jour : **DEPLOIEMENT_V1.4.md**.
 
-## Fichiers
+Le catalogue et les textes restent dans `content.json` et `textes-brief.json`. Le générateur Python produit le HTML complet dans `dist`. Les notes de préparation entre crochets ne sont pas affichées. Les dates manquantes ne bloquent pas le site. Les images locales sont automatiquement optimisées sans toucher aux originaux.
 
-- textes-brief.json : source textuelle complète, non publiée dans dist.
-- editorial_pages.py : contenu et mise en page des rubriques.
-- build.py : générateur, navigation, pied de page et métadonnées.
-- content.json : catalogue et couvertures.
-- site-settings.json : liens de commande, tarifs et audio.
-- site_features.py : formulaires, boutons, FAQ et audio.
-- api/contact.js et lib/contact-service.js : envoi de messages via Brevo sur Vercel.
-- dist/style.css et dist/app.js : style et interactions.
+Compilation : `npm run build`, ou `python -m pip install -r requirements.txt` puis `python build.py`.
 
-Générer : python build.py.
-Voir localement : python -m http.server 8080 --bind 127.0.0.1 --directory dist
-Puis http://127.0.0.1:8080.
+Aperçu : `python -m http.server 8080 --bind 127.0.0.1 --directory dist` puis http://127.0.0.1:8080.
 
-Les fonctions serveur ne tournent pas avec le serveur Python. Tester l’envoi sur votre Vercel configuré. L’atelier reste local. Le MP3 n’est pas fourni ; le lecteur s’active à l’ajout de dist/assets/audio/moliere.mp3. Les identifiants Brevo sont à configurer dans Vercel, jamais dans les fichiers publics.
+Tests : `python -m unittest discover -s tests -p "test_*.py"` et `npm test`.
 
-Les pages HTML et dist/content.json sont générés. Ne pas les modifier à la main. Les images et le catalogue existants sont conservés par l’installateur. Le build ne réécrit plus le README.
+Production Vercel : Build Command `npm run build`, Output Directory `dist`. La variable `SITE_URL` détermine le domaine des canonical, données structurées et sitemap. Valeur par défaut : https://sitelpgrapp.vercel.app. Les secrets Brevo restent dans les variables Vercel. Les formulaires nécessitent les réglages de compte décrits dans le guide ; le serveur Python de prévisualisation ne les exécute pas.
 
-Tests :
-
-    node --test tests/contact.test.js
-    python -m unittest discover -s tests -p "test_*.py"
-
-Le brouillon reste en noindex ; le domaine actuel utilisé dans les métadonnées est sitelpgrapp.vercel.app, configurable par site_url dans site-settings.json. Les pages légales et les points entre crochets restent à compléter.
-
-Images, bonus et quatrième article : voir IMAGES_ET_BONUS_V1.3.0.md. Les images se déposent dans dist/assets/photos, couvertures et presse. Elles sont détectées à la génération ; les URL cover explicites restent prioritaires.
-
-Mise à jour du 20 octobre : voir MAJ_V1.3.md. Nouveau sélecteur abonnement dans dist/subscription.js et page_helpers.py ; PDF et photo de Nantes inclus. L’Atelier de contenu n’est plus lié dans le pied de page.
+L’atelier historique conserve les modifications dans le navigateur et ne publie pas directement. Les fichiers HTML, `dist/content.json`, WebP et cartes de partage sont générés. Les fichiers image originaux sont conservés. `seo-report.json` est un rapport local régénéré à chaque compilation.

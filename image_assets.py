@@ -41,7 +41,7 @@ def portraits(root, esc):
         if paths:
             found.append('<figure><img src="'+esc(paths[0])+'" alt="'+name+'" loading="lazy"><figcaption>'+name+'</figcaption></figure>')
         else:
-            found.append('<figure class="portrait-missing"><span aria-hidden="true">✳</span><figcaption>'+name+'<br><small>Photo à ajouter</small></figcaption></figure>')
+            found.append('<figure class="portrait-missing"><span aria-hidden="true">✳</span><figcaption>'+name+'</figcaption></figure>')
     if not any(find_images(root, 'photos', alias) for alias in ['Hervélina Vyskoc','Valérie Lemoine']):
         return ''
     return '<div class="author-portraits">'+''.join(found)+'</div>'

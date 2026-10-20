@@ -19,7 +19,7 @@ class Reader(HTMLParser):
 
 
 def normal(value):
-    return ' '.join(value.split())
+    return ' '.join(re.sub(r'\s*\[[^\]]*\]', '', value).split())
 
 
 def read(route):

@@ -28,3 +28,11 @@ __pycache__/
 !.env.example
 .vercel/
 __pycache__/
+
+.env
+.env.*
+!.env.example
+.vercel/
+__pycache__/
+.build-venv/
+seo-report.json

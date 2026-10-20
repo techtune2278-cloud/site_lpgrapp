@@ -41,7 +41,8 @@ class V13Tests(unittest.TestCase):
     def test_assets_and_publisher_details_are_present(self):
         prof=(ROOT/'dist/professionnels/index.html').read_text(encoding='utf-8')
         self.assertIn('/assets/documents/dossier-alliances-francaises-lpgrapp.pdf',prof)
-        self.assertIn('/assets/photos/musee-jules-verne-nantes.jpg',prof)
+        self.assertIn('/assets/optimized/',prof)
+        self.assertTrue((ROOT/'dist/assets/photos/musee-jules-verne-nantes.jpg').is_file())
         self.assertTrue((ROOT/'dist/assets/documents/dossier-alliances-francaises-lpgrapp.pdf').is_file())
         for path in (ROOT/'dist/livres').rglob('index.html'):
             if path.parent.name=='livres':continue
