@@ -2,6 +2,7 @@ import json
 import sys
 import tempfile
 import unittest
+from urllib.parse import unquote
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -38,7 +39,7 @@ class SiteTests(unittest.TestCase):
         for path, parser in parsed.items():
             for link in parser.links:
                 route, _, fragment = link.partition('#')
-                route = route.split('?')[0]
+                route = unquote(route.split('?')[0])
                 if route.startswith('/api/'):
                     continue
                 dest = ROOT / 'dist' / route.lstrip('/')

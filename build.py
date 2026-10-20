@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from urllib.parse import urljoin
 from editorial_pages import render_site
+from image_assets import apply_book_images
 
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / 'dist'
@@ -13,7 +14,7 @@ settings = json.loads((ROOT / 'site-settings.json').read_text(encoding='utf-8-si
 paragraphs = json.loads((ROOT / 'textes-brief.json').read_text(encoding='utf-8'))['paragraphs']
 SUMUP = settings['shop_url']
 SITE_URL = settings.get('site_url', 'https://sitelpgrapp.vercel.app').rstrip('/')
-VERSION = '1.2.0'
+VERSION = '1.2.1'
 SERIES = 'Les plus grands racontés aux plus petits'
 
 
@@ -69,6 +70,7 @@ def page(path, title, body, description='', active='', extra='', og_description=
     target.write_text(f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(title)}</title><meta name="description" content="{esc(description)}"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#6d3d72"><link rel="canonical" href="{esc(canonical)}"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(og_description or description)}"><meta property="og:url" content="{esc(canonical)}"><meta property="og:type" content="website"><link rel="stylesheet" href="/style.css">{schema}{extra}</head><body class="editorial-version"><a class="skip" href="#main">Aller au contenu</a><div class="topline">Les plus grands racontés aux plus petits <span>Dès 5 ans</span></div><header><a class="brand" href="/" aria-label="Accueil"><span class="brand-mark" aria-hidden="true">✳</span><span>Les plus grands<br><em>racontés aux plus petits</em></span></a><button class="menu-toggle" aria-expanded="false" aria-controls="nav">Menu ☰</button><nav id="nav">{nav}<a class="nav-order" href="{esc(SUMUP)}">Commander ↗</a></nav></header><main id="main">{body}</main><footer><div class="footer-top"><a class="brand" href="/">Les plus grands<br><em>racontés aux plus petits</em></a><p>Sur le Chemin des Arts<br>Hervélina Vyskoc et Valérie Lemoine<br>TVA non applicable, article 293 B du CGI</p><div><a href="/offrir/">Offrir</a><a href="/bonus/">Bonus et activités</a><a href="/actualites/">Blog et actualités</a><a href="/presse/">Ils parlent de nous</a><a href="/contact/">Contact</a><a href="/livraison/">Livraison et questions</a><a href="https://www.lescompagnonsderoute.com/">Les Compagnons de Route ↗</a><a href="https://www.facebook.com/share/18nftz5tx8/">Facebook ↗</a><a href="https://www.instagram.com/lpgrapp/">Instagram ↗</a></div></div><div class="footer-bottom"><span>© 2026 Sur le Chemin des Arts · V{VERSION}</span><div><a href="/mentions-legales/">Mentions légales</a><a href="/cgv/">CGV</a><a href="/confidentialite/">Confidentialité et cookies</a><a href="/atelier/">Atelier de contenu</a></div></div></footer><script src="/app.js" defer></script></body></html>''', encoding='utf-8')
 
 
+apply_book_images(books, ROOT)
 render_site(globals())
 (OUT / 'content.json').write_text((ROOT / 'content.json').read_text(encoding='utf-8-sig'), encoding='utf-8')
 (OUT / 'robots.txt').write_text('User-agent: *\nDisallow: /\n', encoding='utf-8')

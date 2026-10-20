@@ -1,6 +1,7 @@
 """Mise en page des textes du brief, sans réécriture éditoriale."""
 import json
 from urllib.parse import urljoin
+from image_assets import portraits, press_images
 from site_features import book_order, buying_help, offer_order, contact_form, shipping_body, audio_body
 
 
@@ -18,13 +19,26 @@ def render_site(ctx):
     future = [b for b in books if not b['available']]
     photo_alt = 'Hervélina Vyskoc et Valérie Lemoine, auteurs de la collection, au Festival du Livre de Paris'
     photo = '<div class="photo-placeholder" role="img" aria-label="'+photo_alt+' — photo à ajouter"><span aria-hidden="true">✳</span><p>Hervélina Vyskoc et Valérie Lemoine</p><small>Photo à ajouter</small></div>'
+    photo = portraits(root, esc) or photo
     presse = [
-        {'name': 'La République des Pyrénées', 'date': '30 avril 2026', 'details': 'page 49, par Aurélie Dugast', 'url': 'https://www.larepubliquedespyrenees.fr/culture-et-loisirs/livres/montaut-hervelina-vyskoc-et-valerie-lemoine-racontent-les-grands-ecrivains-aux-enfants-28856816.php'},
-        {'name': 'Le Trégor', 'date': '1er avril 2026', 'details': 'par Thierry Morisseau', 'url': 'https://actu.fr/bretagne/runan_22269/cotes-darmor-dans-leur-nouvelle-collection-ils-racontent-les-plus-grands-auteurs-francais-aux-plus-petits_64086485.html'},
-        {'name': 'Le Flâneur', 'date': '27 juin 2026', 'details': 'par Pascal Le Coz', 'url': 'https://www.flaneur-mag.com/2026/06/27/les-plus-grands-racontes-aux-plus-petits-les-grands-auteurs-a-decouvrir-en-livres-denfants/'},
+        {'key': 'pyrenees', 'name': 'La République des Pyrénées', 'date': '30 avril 2026', 'details': 'page 49, par Aurélie Dugast', 'url': 'https://www.larepubliquedespyrenees.fr/culture-et-loisirs/livres/montaut-hervelina-vyskoc-et-valerie-lemoine-racontent-les-grands-ecrivains-aux-enfants-28856816.php'},
+        {'key': 'tregor', 'name': 'Le Trégor', 'date': '1er avril 2026', 'details': 'par Thierry Morisseau', 'url': 'https://actu.fr/bretagne/runan_22269/cotes-darmor-dans-leur-nouvelle-collection-ils-racontent-les-plus-grands-auteurs-francais-aux-plus-petits_64086485.html'},
+        {'key': 'flaneur', 'name': 'Le Flâneur', 'date': '27 juin 2026', 'details': 'par Pascal Le Coz', 'url': 'https://www.flaneur-mag.com/2026/06/27/les-plus-grands-racontes-aux-plus-petits-les-grands-auteurs-a-decouvrir-en-livres-denfants/'},
     ]
+    presse.append({'key':'ouest-france','name':'Ouest-France','date':'','details':'','url':'https://www.ouest-france.fr/bretagne/runan-22260/le-concept-de-valerie-lemoine-dans-les-cotes-darmor-la-litterature-a-hauteur-denfant-eddbc2d8-3ef5-11f1-b283-bbda7cee88c6'})
     def press_cards():
-        return '<div class="press-grid">'+''.join('<article class="press-article"><div class="press-placeholder" role="img" aria-label="Coupure de '+esc(a['name'])+' du '+a['date']+' — image à ajouter">Coupure de presse à ajouter</div><h3>'+a['name']+'</h3><p>'+a['date']+'<br>'+a['details']+'</p><p class="muted">Courte citation à ajouter.</p><a class="underlink" href="'+a['url']+'">Lire l’article ↗</a></article>' for a in presse)+'</div>'
+        result = []
+        for article in presse:
+            paths=press_images(root,article['key'])
+            if paths:
+                image='<a class="press-image-link" href="'+esc(paths[0])+'" target="_blank" rel="noopener"><img src="'+esc(paths[0])+'" alt="Coupure de '+esc(article['name'])+'" loading="lazy"><span>Agrandir la coupure ↗</span></a>'
+                if len(paths)>1:
+                    image+='<div class="press-pages">'+''.join('<a href="'+esc(url)+'" target="_blank" rel="noopener">Page '+str(i)+' ↗</a>' for i,url in enumerate(paths,1))+'</div>'
+            else:
+                image='<div class="press-placeholder" role="img" aria-label="Coupure de '+esc(article['name'])+' — image à ajouter">Coupure de presse à ajouter</div>'
+            meta='<p>'+article['date']+('<br>' if article['date'] and article['details'] else '')+article['details']+'</p>' if article['date'] or article['details'] else ''
+            result.append('<article class="press-article">'+image+'<h3>'+article['name']+'</h3>'+meta+'<p class="muted">Courte citation à ajouter.</p><a class="underlink" href="'+article['url']+'">Lire l’article ↗</a></article>')
+        return '<div class="press-grid">'+''.join(result)+'</div>'
 
     # Accueil : les onze blocs sont conservés dans l’ordre du document.
     hero_visual = ''.join('<div class="hero-book hb'+str(i)+'">'+cover(books[n], True)+'</div>' for i, n in enumerate([1, 5, 8]))
@@ -122,7 +136,7 @@ def render_site(ctx):
     page('ou-nous-trouver','Où nous trouver',heading('Salons et dédicaces','Où nous trouver')+'<section class="section"><div class="empty-panel"><h2>Salons et dédicaces</h2><p>Dates et lieux à ajouter.</p>'+link('Un projet de rencontre ? Parlez-nous-en','/contact/','text')+'</div><h2>Chez votre libraire</h2><p>Demandez-le à votre libraire : disponible via Dilicom.</p></section>',active='Où nous trouver')
     page('agenda','Où nous trouver',heading('Où nous trouver','Cette page a changé d’adresse.')+link('Où nous trouver','/ou-nous-trouver/'),extra='<meta http-equiv="refresh" content="0;url=/ou-nous-trouver/">')
     page('actualites','Blog et actualités',heading('La collection','Blog et actualités')+'<section class="section copy-section"><p>Actualités à ajouter.</p></section>')
-    page('bonus','Bonus et activités',heading('Bonus et activités','Les bonus de la collection')+'<section class="section"><article class="bonus-card"><span class="sound-icon" aria-hidden="true">♫</span><div><h2>Molière</h2><p>Lecture d’un texte sous forme d’interprétation théâtrale pour Molière</p>'+link('Écouter le bonus','/bonus/moliere/','text')+'</div></article></section>')
+    page('bonus','Bonus et activités',heading('Bonus et activités','Les bonus de la collection')+'<section class="section"><article class="bonus-card"><span class="sound-icon" aria-hidden="true">♫</span><div><h2>Molière</h2><p>Lecture d’un texte sous forme d’interprétation théâtrale pour Molière</p>'+link('Accéder aux bonus',settings.get('bonus_page_url') or '/bonus/moliere/','text')+'</div></article></section>')
     page('bonus/moliere','Molière : le bonus audio',heading('Tome 11','Lecture d’un texte sous forme d’interprétation théâtrale pour Molière')+audio_body(settings,root))
     legal=[('mentions-legales','Mentions légales','Micro-entreprise « Sur le Chemin des Arts ». TVA non applicable, article 293 B du CGI. Nom, SIRET, adresse, directeur de la publication et hébergeur : à compléter.'),('cgv','Conditions générales de vente','TVA non applicable, article 293 B du CGI. Prix, port, délais, droit de rétractation, retours et médiateur de la consommation : informations à finaliser avant ouverture. Pour l’abonnement : dates de parution prévues, remboursement du solde si un titre n’est pas livré, droit de rétractation de 14 jours.'),('confidentialite','Confidentialité et cookies','Le formulaire utilise votre nom, votre e-mail et votre message pour répondre à votre demande. Lorsqu’il est activé, l’envoi est assuré par Brevo. Votre demande ne vous inscrit pas à une newsletter. Aucun outil de mesure d’audience n’est activé. L’atelier conserve ses données uniquement dans votre navigateur. Informations sur le responsable du traitement, les durées de conservation et les droits : à compléter.')]
     for route,title,copy in legal:page(route,title,heading('Informations',title)+'<section class="section copy-section"><p class="notice">Page à finaliser avant publication publique.</p>'+para(copy)+'</section>')

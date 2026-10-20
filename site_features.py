@@ -79,6 +79,9 @@ def audio_body(settings, root):
     local_file = root / 'dist/assets/audio/moliere.mp3'
     if not url and local_file.is_file() and local_file.stat().st_size > 0:
         url = '/assets/audio/moliere.mp3'
+    if not url and safe_url(settings.get('bonus_page_url')):
+        external = escape(settings['bonus_page_url'], quote=True)
+        return '<section class="section"><div class="audio-panel"><h2>Écouter le bonus de Molière</h2><p>Le bonus est accessible sur le site Les Compagnons de Route.</p><a class="button primary" href="'+external+'">Accéder au bonus ↗</a></div></section>'
     if not url:
         return '''<section class="section"><div class="audio-panel"><span class="sound-icon" aria-hidden="true">♫</span><h2>L’enregistrement sera bientôt disponible</h2><p>Cette page accueillera la lecture théâtrale qui accompagne le tome 11. Revenez ici pour l’écouter.</p><a class="underlink" href="/livres/moliere/">Découvrir le livre Molière →</a></div></section>'''
     escaped = escape(url, quote=True)
