@@ -64,8 +64,8 @@ class EditorialTests(unittest.TestCase):
         for number in [471,472,473,474,475,476]:
             self.assertIn(normal(SOURCE[str(number)]), actual)
         actual,_=read('offrir')
-        self.assertIn('Composez votre abonnement',actual)
-        self.assertIn('Chaque abonnement comprend une carte et une dédicace d’un des auteurs de la collection.',actual)
+        self.assertIn('Offrir un abonnement à une collection de livres pour enfants',actual)
+        self.assertIn("Une carte et une dédicace d'Hervélina ou de Valérie.",actual)
 
     def test_no_old_word_or_unconfirmed_upper_age_in_public_copy(self):
         for path in (ROOT/'dist').rglob('*.html'):

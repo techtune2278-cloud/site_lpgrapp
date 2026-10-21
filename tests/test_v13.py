@@ -28,15 +28,13 @@ class V13Tests(unittest.TestCase):
                     self.assertIn('noopener',link.get('rel',''))
         self.assertEqual(external_links('<a href="/livres/">Livres</a>'),'<a href="/livres/">Livres</a>')
 
-    def test_six_title_builder_excludes_two_cheap_titles_and_collectors(self):
-        books=json.loads((ROOT/'content.json').read_text(encoding='utf-8'))['books']
+    def test_free_builder_includes_available_cheap_titles(self):
+        books=json.loads((ROOT/'dist/content.json').read_text())['books']
         eligible=subscription_books(books)
-        self.assertTrue(eligible)
-        self.assertFalse({1,2,10,20,30}.intersection(b['number'] for b in eligible))
-        self.assertTrue(all(b['price']==15 and b['pages']==24 for b in eligible))
-        markup=(ROOT/'dist/offrir/index.html').read_text(encoding='utf-8')
+        self.assertTrue({1,2}.issubset(b['number'] for b in eligible))
+        markup=(ROOT/'dist/offrir/index.html').read_text()
         self.assertIn('id="subscription-builder"',markup)
-        self.assertIn('value="2"',markup)
+        self.assertIn('id="subscription-shipments"',markup)
 
     def test_assets_and_publisher_details_are_present(self):
         prof=(ROOT/'dist/professionnels/index.html').read_text(encoding='utf-8')

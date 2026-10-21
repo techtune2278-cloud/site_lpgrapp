@@ -10,7 +10,7 @@ SERIES='Les plus grands racontés aux plus petits'
 DESCRIPTIONS={
  'livres':'Découvrez la collection de livres jeunesse dès 5 ans : dix grands auteurs déjà racontés aux enfants, des extraits, des jeux et les titres à paraître.',
  'professionnels':'Libraires, bibliothèques, musées, écoles et Alliances françaises : découvrez la collection jeunesse dès 5 ans, les ISBN et demandez votre devis.',
- 'offrir':'Composez un abonnement de six livres jeunesse dès 5 ans ou choisissez une commande groupée pour offrir les grands auteurs. Prix, envois et idées cadeaux.',
+ 'offrir':"Offrez à un enfant dès 5 ans un abonnement à la collection : choisissez vos livres, groupez les envois. Carte et dédicace d'Hervélina ou Valérie.",
  'presse':'La presse présente Les plus grands racontés aux plus petits : articles de La République des Pyrénées, du Trégor, du Flâneur et de Ouest-France.',
  'fabrique-en-france':'Découvrez la fabrication en France des livres jeunesse : format 18 × 18 cm, petites séries, couture Singer, illustrations et soin apporté à chaque ouvrage.',
  'contact':'Contactez Sur le Chemin des Arts pour une question sur les livres, un abonnement, une commande professionnelle ou une invitation à un salon.',
@@ -31,7 +31,7 @@ DESCRIPTIONS={
 
 def public_copy(value):
     # Les crochets du cahier des charges contiennent des notes de préparation.
-    return re.sub(r'\s*\[[^\]]*\]','',value).strip()
+    return re.sub(r'\s*\[(?=[^\]]*[A-Za-zÀ-ÿ])[^\]]*\]','',value).strip()
 
 
 def site_url(settings):
@@ -48,7 +48,7 @@ class Publication:
         self.media=MediaPipeline(root);self.media.icons();self.pages=[]
         self.book_by_route={'livres/'+b['slug']:b for b in books}
         self.graph=[
-         {'@type':'Organization','@id':base+'/#organization','name':'Sur le Chemin des Arts','url':base+'/', 'logo':{'@type':'ImageObject','url':base+'/apple-touch-icon.png'},'address':{'@type':'PostalAddress','streetAddress':'22 Rue de Lassun','postalCode':'64800','addressLocality':'Montaut','addressCountry':'FR'},'identifier':'SIRET 953 755 477 00015','sameAs':['https://www.lescompagnonsderoute.com/','https://www.instagram.com/lpgrapp/']},
+         {'@type':'Organization','@id':base+'/#organization','name':'Sur le Chemin des Arts','url':base+'/', 'logo':{'@type':'ImageObject','url':base+'/apple-touch-icon.png'},'address':{'@type':'PostalAddress','streetAddress':'22 Rue de Lassun','postalCode':'64800','addressLocality':'Montaut','addressCountry':'FR'},'email':'contact@lesplusgrandsracontes.fr','identifier':'SIRET 953 755 477 00015','sameAs':['https://www.lescompagnonsderoute.com/','https://www.instagram.com/lpgrapp/']},
          {'@type':'WebSite','@id':base+'/#website','url':base+'/','name':SERIES,'inLanguage':'fr-FR','publisher':{'@id':base+'/#organization'}},
          {'@type':'BookSeries','@id':base+'/#collection','name':SERIES,'inLanguage':'fr','publisher':{'@id':base+'/#organization'}},
          {'@type':'Person','@id':base+'/auteurs/#hervelina-vyskoc','name':'Hervélina Vyskoc','jobTitle':['Comédienne','Écrivain','Professeur de théâtre'],'worksFor':{'@id':base+'/#organization'}},

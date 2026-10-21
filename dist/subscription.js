@@ -1,51 +1,43 @@
-(function(root){
-  'use strict';
-  function calculate(count,group,books=count*15){
-    if(!Number.isInteger(count)||count<0||count>6||![1,2,3].includes(group)||!Number.isFinite(books)||books<0||(count===0&&books!==0))throw new Error('Sélection invalide');
-    const shipments=Math.ceil(count/group),shipping=shipments*(group===1?4.5:7);
-    return {count,books,shipments,shipping,total:books+shipping};
+(()=>{
+ 'use strict';
+ const form=document.querySelector('#subscription-builder');if(!form)return;
+ const R=globalThis.LPGRSubscriptionRules,result=document.querySelector('#subscription-summary'),parcels=document.querySelector('#subscription-parcels'),shipping=document.querySelector('#subscription-shipments');
+ const submit=document.querySelector('#subscription-submit'),status=document.querySelector('#subscription-availability'),responseText=document.querySelector('#subscription-result'),recipient=document.querySelector('#recipient-fields');
+ let catalog=[],ready=false,enabled=false,busy=false,startedAt=Date.now(),current=null;
+ const ids=name=>Array.from(form.querySelectorAll(`[name="${name}"]:checked`),b=>Number(b.value));
+ const money=value=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(value);
+ function update(){
+  const paid=ids('subscription-title'),reserved=ids('reserve-title');const previous=Number(shipping.value)||1;shipping.replaceChildren();
+  if(paid.length){for(let i=1;i<=paid.length;i++){const option=document.createElement('option');option.value=i;option.textContent=`${i} envoi${i>1?'s':''}`;shipping.append(option);}shipping.value=String(Math.min(previous,paid.length));}
+  else{const option=document.createElement('option');option.value='0';option.textContent=reserved.length?'Réservations : aucun envoi à régler':'Choisissez vos livres';shipping.append(option);}
+  shipping.disabled=paid.length===0;recipient.hidden=paid.length===0;recipient.disabled=paid.length===0;
+  current=null;result.replaceChildren();parcels.replaceChildren();document.querySelector('#reservation-summary').textContent='';
+  if(!ready||(!paid.length&&!reserved.length)){result.textContent='Choisissez vos livres pour afficher le détail : livres, port, total.';submit.disabled=true;return;}
+  try{current=R.quote(catalog,paid,reserved,Number(shipping.value));}catch(error){result.textContent=error.message;submit.disabled=true;return;}
+  const total=document.createElement('strong');total.textContent=current.requiresQuote?`${money(current.books)} de livres · port et total sur devis`:`Livres : ${money(current.books)} · Port : ${money(current.shipping)} · Total : ${money(current.total)}`;result.append(total);
+  if(current.requiresQuote){const p=document.createElement('p');p.textContent='Un colis dépasse 12 livres : nous vous communiquerons le port avant tout paiement. Vous pouvez augmenter le nombre d’envois pour obtenir un tarif calculé.';result.append(p);}
+  for(const [i,parcel] of current.parcels.entries()){
+   const card=document.createElement('article');card.className='parcel-card';const h=document.createElement('h3');h.textContent=`Envoi ${i+1} — ${parcel.books.length} livre(s)`;const list=document.createElement('ul');
+   for(const book of parcel.books){const item=document.createElement('li');item.textContent=`${book.title} — ${money(book.price)}${book.release_month?' · '+book.release_month:''}`;list.append(item);}
+   const p=document.createElement('p');p.textContent=`Port : ${parcel.shipping===null?'sur devis':money(parcel.shipping)}. `+(parcel.release?`Ce colis attend la parution prévue en ${parcel.release} ; envoi sous 10 jours après cette parution.`:'Livres déjà parus ; calendrier à confirmer.');card.append(h,list,p);parcels.append(card);
   }
-  function validSelection(books,pack){
-    if(!['decouverte','passion'].includes(pack)||books.length!==6||new Set(books.map(b=>b.number)).size!==6)return false;
-    const cheap=books.filter(b=>[1,2].includes(b.number));
-    if(books.some(b=>[10,20,30].includes(b.number)))return false;
-    if(pack==='passion')return cheap.length===0&&books.every(b=>b.price===15);
-    return cheap.length===2&&cheap.every(b=>b.price===9)&&books.filter(b=>![1,2].includes(b.number)).every(b=>b.price===15);
-  }
-  if(typeof module==='object'&&module.exports)module.exports={calculate,validSelection};
-  root.LPGRSubscription={calculate,validSelection};
-  if(typeof document==='undefined')return;
-  const form=document.querySelector('#subscription-builder');if(!form)return;
-  const boxes=Array.from(form.querySelectorAll('[name="subscription-title"]'));
-  const result=document.querySelector('#subscription-summary'),submit=document.querySelector('#subscription-submit');
-  const selected=()=>boxes.filter(box=>box.checked);
-  const group=()=>Number(form.querySelector('[name="subscription-shipping"]:checked').value);
-  const pack=()=>form.querySelector('[name="subscription-pack"]:checked').value;
-  const items=()=>selected().map(box=>({number:Number(box.value),price:Number(box.dataset.price)}));
-  function configure(reset){
-    for(const box of boxes){const starter=[1,2].includes(Number(box.value));if(starter){box.checked=pack()==='decouverte';box.closest('label').hidden=pack()!=='decouverte';}else if(reset)box.checked=false;}
-    document.querySelector('#subscription-selection-help').textContent=pack()==='decouverte'?'Pack Découverte : Rimbaud et Hugo sont inclus ; choisissez quatre autres titres à 15 €.':'Pack Passion : choisissez six titres à 15 €, hors Rimbaud, Hugo et Collectors.';
-    update();
-  }
-  function update(){
-    const count=selected().length;
-    for(const box of boxes)box.disabled=[1,2].includes(Number(box.value))||(count===6&&!box.checked);
-    submit.disabled=!validSelection(items(),pack());
-    result.replaceChildren();const title=document.createElement('strong');title.textContent=`${count} livre${count>1?'s':''} sélectionné${count>1?'s':''} sur 6`;
-    const text=document.createElement('p');const value=calculate(count,group(),items().reduce((sum,b)=>sum+b.price,0));
-    text.textContent=count===6?`${value.books} € de livres + ${value.shipping} € de port = ${value.total} € au total. ${value.shipments} envois en Lettre suivie de ${group()} livre(s). Carte et dédicace d’un des auteurs comprises.`:`Choisissez encore ${6-count} titre${6-count>1?'s':''}. Le total sera calculé pour les six livres.`;
-    result.append(title,text);
-  }
-  form.addEventListener('change',event=>event.target.name==='subscription-pack'?configure(true):update());
-  form.addEventListener('submit',event=>{
-    event.preventDefault();if(!validSelection(items(),pack()))return;
-    const value=calculate(6,group(),items().reduce((sum,b)=>sum+b.price,0));
-    const name=pack()==='decouverte'?'Découverte':'Passion';
-    const rhythm={1:'Plaisir',2:'Équilibre',3:'Éco'}[group()];
-    const titles=selected().map(box=>`- N° ${box.value} : ${box.dataset.title}, ${box.dataset.price} € (${box.dataset.available==='true'?'disponible':'à paraître'})`);
-    const request={subject:`Abonnement ${name} — formule ${rhythm}`,message:`Bonjour, je souhaite composer cet abonnement :\n\nPack ${name} — formule ${rhythm}\n${titles.join('\n')}\n\n${value.books} € de livres + ${value.shipping} € de port = ${value.total} €.\n${value.shipments} envois de ${group()} livre(s) en Lettre suivie, France.\nAbonnement cadeau : ${document.querySelector('#subscription-gift').checked?'oui':'non'}. Carte et dédicace d’un des auteurs comprises.\n\nMerci de me confirmer les dates de parution et d’envoi ainsi que les modalités de paiement en une fois.`};
-    try{sessionStorage.setItem('lpgr-subscription-request',JSON.stringify(request));location.href='/contact/?sujet=abonnement-personnalise';}
-    catch{result.replaceChildren();const p=document.createElement('p');p.textContent=request.message;p.style.whiteSpace='pre-wrap';const a=document.createElement('a');a.href='/contact/';a.textContent='Ouvrir le formulaire de contact →';result.append(p,a);}
-  });
-  configure(false);
-})(typeof globalThis!=='undefined'?globalThis:this);
+  document.querySelector('#reservation-summary').textContent=current.reserved.length?`Réservations sans paiement, exclues du total : ${current.reserved.map(b=>b.title).join(', ')}.`:'';
+  submit.disabled=!enabled||busy;submit.textContent=current.paid.length?'Envoyer ma demande':'Demander ces réservations sans paiement';
+ }
+ function request(){
+  if(!current)throw Error('Choisissez au moins un livre ou une réservation.');if(!form.reportValidity())return null;
+  const values=Object.fromEntries(new FormData(form));return {...values,paidIds:ids('subscription-title'),reservedIds:ids('reserve-title'),shipments:Number(shipping.value),expectedTotal:current.total,consent:values.consent==='on',startedAt};
+ }
+ function message(data){return R.summary(current)+`\n\nAcheteur : ${data.nom}\nE-mail : ${data.email}\nTéléphone : ${data.phone||'Non renseigné'}\n\nDestinataire : ${data.recipient_name||'À confirmer'}\n${data.address||''}\n${data.address_extra||''}\n${data.postal_code||''} ${data.city||''}\nFrance\n\nMot pour la carte :\n${data.card_message||'Aucun'}\n\nAccord d’utilisation des données donné pour traiter cette demande.`;}
+ form.addEventListener('change',event=>{if(['subscription-title','reserve-title'].includes(event.target.name)||event.target===shipping)update();});
+ form.addEventListener('submit',async event=>{
+  event.preventDefault();if(!enabled||busy||!ready)return;let data;try{data=request();}catch(error){responseText.textContent=error.message;return;}if(!data)return;
+  busy=true;submit.disabled=true;form.setAttribute('aria-busy','true');responseText.textContent='Envoi de votre demande…';
+  try{const response=await fetch('/api/subscription',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(data),signal:AbortSignal.timeout(15000)});const answer=await response.json();if(!response.ok||answer.ok!==true)throw Error(answer.error||'L’envoi n’a pas pu être confirmé.');responseText.textContent='Votre demande a été transmise au service d’envoi. Nous vous confirmerons le montant et le calendrier par e-mail, avec le lien de paiement pour les livres retenus. Vos réservations restent sans paiement.';startedAt=Date.now();}
+  catch(error){responseText.textContent=error.name==='TimeoutError'?'L’envoi n’a pas pu être confirmé à temps. Votre saisie est conservée.':error.message;}
+  finally{busy=false;form.removeAttribute('aria-busy');update();responseText.focus();}
+ });
+ document.querySelector('#subscription-email').addEventListener('click',()=>{try{const data=request();if(data)location.href='mailto:contact@lesplusgrandsracontes.fr?subject='+encodeURIComponent('Demande d’abonnement / réservation')+'&body='+encodeURIComponent(message(data));}catch(error){responseText.textContent=error.message;}});
+ document.querySelector('#subscription-download').addEventListener('click',()=>{try{const data=request();if(!data)return;const url=URL.createObjectURL(new Blob([message(data)],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='demande-abonnement.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}catch(error){responseText.textContent=error.message;}});
+ Promise.all([fetch('/content.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error();return r.json();}),fetch('/api/subscription',{headers:{Accept:'application/json'},cache:'no-store',signal:AbortSignal.timeout(10000)}).then(r=>r.ok?r.json():{enabled:false}).catch(()=>({enabled:false}))]).then(([data,service])=>{catalog=data.books;ready=true;enabled=service.enabled===true;const requested=Number(new URLSearchParams(location.search).get('reserver'));if(Number.isInteger(requested)&&requested>0){const box=Array.from(form.querySelectorAll('input[type=checkbox][value]')).find(input=>Number(input.value)===requested);if(box)box.checked=true;}status.textContent=enabled?'Votre demande sera envoyée à contact@lesplusgrandsracontes.fr.':'L’envoi direct est indisponible. Utilisez « Préparer un e-mail » pour écrire à contact@lesplusgrandsracontes.fr ou téléchargez votre récapitulatif.';update();}).catch(()=>{status.textContent='Le catalogue n’a pas pu être chargé. Rechargez la page ou contactez contact@lesplusgrandsracontes.fr.';});
+})();

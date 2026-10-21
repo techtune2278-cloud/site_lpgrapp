@@ -11,14 +11,14 @@ def read(route):
 class V15Tests(unittest.TestCase):
  def test_new_subscription_copy_prices_and_removed_sentences(self):
   markup,text,p=read('offrir')
-  for phrase in ['Pack « Découverte »','78 € de livres','Éco : 92 €','Équilibre : 99 €','Plaisir : 105 €','Pack « Passion »','Éco : 104 €','Équilibre : 111 €','Plaisir : 117 €','6 × 4,50 €','Lettre suivie']:
+  for phrase in ['Choisir vos livres','Choisir le nombre d’envois','6 envois, 117 €','3 envois de 2 livres, 111 €','2 envois de 3 livres, 104 €']:
    self.assertIn(phrase,text)
   for route in ['offrir','cgv','livraison','faq']:
    markup,text,_=read(route)
    for phrase in ['120 €','30 € de port','au même prix','Une offre simple, sans remise','Aucune remise sur les livres (prix unique du livre)']:
     self.assertNotIn(phrase,text)
  def test_new_pictures_and_bookstores_are_present(self):
-  for route,alt in [('offrir','Une enfant découvre'),('offrir','Les dix livres'),('fabrique-en-france','tranches colorées')]:
+  for route,alt in [('offrir','Une petite fille'),('livres','Les dix livres'),('fabrique-en-france','tranches colorées')]:
    _,_,p=read(route);self.assertTrue(any(tag=='img' and alt in attrs.get('alt','') for tag,attrs in p.attrs))
   markup,text,p=read('ou-nous-trouver');self.assertLess(text.index('Chez votre libraire'),text.index('Salons et dédicaces'))
   for value in ['16 place de la Liberté','22260 Pontrieux','15 Rue des Chapeliers','22300 Lannion','02 96 92 95 62','02 96 37 40 53']:self.assertIn(value,text)
