@@ -122,12 +122,14 @@
       "title": "Collector n° 1",
       "slug": "collector-n-1",
       "available": false,
-      "price": 18,
+      "price": 16.5,
       "pages": 32,
       "isbn": "9782489192056",
       "color": "#e9a048",
       "cover": "",
-      "description": ""
+      "description": "",
+      "release_month": "2026-12",
+      "status": "prochain"
     },
     {
       "number": 11,
@@ -152,7 +154,9 @@
       "isbn": "",
       "color": "#b96c91",
       "cover": "",
-      "description": ""
+      "description": "",
+      "release_month": "2027-04",
+      "status": "prochain"
     },
     {
       "number": 13,
@@ -164,7 +168,9 @@
       "isbn": "",
       "color": "#e6a34e",
       "cover": "",
-      "description": ""
+      "description": "",
+      "release_month": "2027-04",
+      "status": "prochain"
     },
     {
       "number": 14,
@@ -176,7 +182,9 @@
       "isbn": "",
       "color": "#ae76ae",
       "cover": "",
-      "description": ""
+      "description": "",
+      "release_month": "2027-04",
+      "status": "prochain"
     },
     {
       "number": 15,
@@ -188,7 +196,9 @@
       "isbn": "",
       "color": "#77a7a2",
       "cover": "",
-      "description": ""
+      "description": "",
+      "release_month": "2027-04",
+      "status": "prochain"
     },
     {
       "number": 16,
@@ -200,7 +210,9 @@
       "isbn": "",
       "color": "#7f9d68",
       "cover": "",
-      "description": ""
+      "description": "",
+      "release_month": "2027-10",
+      "status": "prochain"
     },
     {
       "number": 17,
@@ -212,7 +224,9 @@
       "isbn": "",
       "color": "#789eb7",
       "cover": "",
-      "description": ""
+      "description": "",
+      "release_month": "2027-10",
+      "status": "prochain"
     },
     {
       "number": 18,
@@ -224,7 +238,9 @@
       "isbn": "",
       "color": "#c27b72",
       "cover": "",
-      "description": ""
+      "description": "",
+      "release_month": "2027-10",
+      "status": "prochain"
     },
     {
       "number": 19,
@@ -236,19 +252,23 @@
       "isbn": "",
       "color": "#b28f60",
       "cover": "",
-      "description": ""
+      "description": "",
+      "release_month": "2027-10",
+      "status": "prochain"
     },
     {
       "number": 20,
       "title": "Collector n° 2",
       "slug": "collector-n-2",
       "available": false,
-      "price": 15,
+      "price": 16.5,
       "pages": 32,
       "isbn": "",
       "color": "#a494b8",
       "cover": "",
-      "description": ""
+      "description": "",
+      "release_month": "2027-12",
+      "status": "prochain"
     },
     {
       "number": 21,
@@ -363,7 +383,7 @@
       "title": "Collector n° 3",
       "slug": "collector-n-3",
       "available": false,
-      "price": 15,
+      "price": 16.5,
       "pages": 32,
       "isbn": "",
       "color": "#b28f60",
@@ -407,5 +427,58 @@
       "description": ""
     }
   ],
-  "events": []
+  "events": [
+    {
+      "slug": "plesidy-decembre-2026",
+      "title": "Rencontre à Plésidy",
+      "start_date": "2026-12-20",
+      "city": "Plésidy",
+      "place": "",
+      "confirmed": false,
+      "description": "Date communiquée par les auteurs, lieu et organisation à confirmer."
+    },
+    {
+      "slug": "parentis-2027",
+      "title": "Rencontre à Parentis-en-Born",
+      "start_date": "2027-06-12",
+      "city": "Parentis-en-Born",
+      "place": "",
+      "confirmed": false,
+      "description": "Date communiquée par les auteurs, lieu et organisation à confirmer."
+    },
+    {
+      "slug": "roche-calais-2027",
+      "title": "Rencontre à La Roche-Calais",
+      "start_date": "2027-06-13",
+      "city": "La Roche-Calais",
+      "place": "",
+      "confirmed": false,
+      "description": "Date communiquée par les auteurs, lieu et organisation à confirmer."
+    }
+  ],
+  "stores": [
+    {
+      "slug": "monocle",
+      "name": "La Librairie Monocle",
+      "address": "16 place de la Liberté",
+      "postal_code": "22260",
+      "city": "Pontrieux",
+      "phone": "02 96 92 95 62",
+      "url": "https://librairesenbretagne.com/presentation/librairie_monocle/"
+    },
+    {
+      "slug": "gwalarn",
+      "name": "Librairie Gwalarn",
+      "address": "15 Rue des Chapeliers",
+      "postal_code": "22300",
+      "city": "Lannion",
+      "phone": "02 96 37 40 53",
+      "url": "https://gwalarn.fr/"
+    }
+  ],
+  "subscription": {
+    "min_books": 3,
+    "max_books": 12,
+    "max_parcel": 3
+  }
 }

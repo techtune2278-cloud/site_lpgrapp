@@ -36,13 +36,19 @@ def apply_book_images(books, root):
 
 def portraits(root, esc):
     found = []
+    has_photo = False
     for name, aliases in [('Hervélina Vyskoc', ['Hervélina Vyskoc','Hervelina Vyskoc']), ('Valérie Lemoine', ['Valérie Lemoine','Valerie Lemoine'])]:
-        paths = find_images(root, 'photos', *aliases)
+        preferred = root / 'dist/assets/photos/hervelina-portrait.jpg'
+        if name == 'Hervélina Vyskoc' and preferred.is_file():
+            paths = ['/assets/photos/hervelina-portrait.jpg']
+        else:
+            paths = find_images(root, 'photos', *aliases)
         if paths:
+            has_photo = True
             found.append('<figure><img src="'+esc(paths[0])+'" alt="'+name+'" loading="lazy"><figcaption>'+name+'</figcaption></figure>')
         else:
             found.append('<figure class="portrait-missing"><span aria-hidden="true">✳</span><figcaption>'+name+'</figcaption></figure>')
-    if not any(find_images(root, 'photos', alias) for alias in ['Hervélina Vyskoc','Valérie Lemoine']):
+    if not has_photo:
         return ''
     return '<div class="author-portraits">'+''.join(found)+'</div>'
 

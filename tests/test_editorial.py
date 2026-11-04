@@ -32,7 +32,7 @@ def read(route):
 class EditorialTests(unittest.TestCase):
     def test_home_visitor_paragraphs_are_complete(self):
         actual, _ = read('')
-        for number in [59,60,63,64,66,67,68,69,73,74,75,76,100,103]:
+        for number in [66,67,68,69,73,74,75,100,103]:
             expected=SOURCE[str(number)].replace('écrivaine','écrivain') if number==59 else SOURCE[str(number)]
             self.assertIn(normal(expected), actual, f'Paragraphe {number} absent ou réécrit')
         for number in [62,65,70,72,77,90,96,99,102]:

@@ -60,7 +60,8 @@ class Publication:
 
     def indexable(self,route):
         if self.settings.get('publication_mode','production')!='production' or os.environ.get('VERCEL_ENV')=='preview':return False
-        if route in {'atelier','404','autrices','agenda','newsletter-confirmee','faq'}:return False
+        if route in {'atelier','administration','404','autrices','agenda','newsletter-confirmee','faq'}:return False
+        if route in self.settings.get('_unconfirmed_routes',[]):return False
         if route=='actualites' and not self.settings.get('_has_news'):return False
         return True
 

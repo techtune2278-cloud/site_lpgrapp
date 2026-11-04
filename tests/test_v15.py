@@ -11,7 +11,7 @@ def read(route):
 class V15Tests(unittest.TestCase):
  def test_new_subscription_copy_prices_and_removed_sentences(self):
   markup,text,p=read('offrir')
-  for phrase in ['Choisir vos livres','Choisir le nombre d’envois','6 envois, 117 €','3 envois de 2 livres, 111 €','2 envois de 3 livres, 104 €']:
+  for phrase in ['Choisir vos livres','Mois et composition des colis','colis de 1 à 3 livres','virement']:
    self.assertIn(phrase,text)
   for route in ['offrir','cgv','livraison','faq']:
    markup,text,_=read(route)
@@ -22,7 +22,7 @@ class V15Tests(unittest.TestCase):
    _,_,p=read(route);self.assertTrue(any(tag=='img' and alt in attrs.get('alt','') for tag,attrs in p.attrs))
   markup,text,p=read('ou-nous-trouver');self.assertLess(text.index('Chez votre libraire'),text.index('Salons et dédicaces'))
   for value in ['16 place de la Liberté','22260 Pontrieux','15 Rue des Chapeliers','22300 Lannion','02 96 92 95 62','02 96 37 40 53']:self.assertIn(value,text)
-  for url in ['tel:+33296929562','tel:+33296374053']:self.assertTrue(any(tag=='a' and attrs.get('href')==url for tag,attrs in p.attrs))
+  for url in ['tel:0296929562','tel:0296374053']:self.assertTrue(any(tag=='a' and attrs.get('href')==url for tag,attrs in p.attrs))
  def test_centered_quote_and_correct_museum_caption(self):
   for route in ['professionnels','presse']:
    markup,text,_=read(route);self.assertIn('nothomb-quote quote-centered',markup);self.assertNotIn('Courte citation à ajouter.',text)

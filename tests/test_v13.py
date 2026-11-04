@@ -34,7 +34,7 @@ class V13Tests(unittest.TestCase):
         self.assertTrue({1,2}.issubset(b['number'] for b in eligible))
         markup=(ROOT/'dist/offrir/index.html').read_text()
         self.assertIn('id="subscription-builder"',markup)
-        self.assertIn('id="subscription-shipments"',markup)
+        self.assertIn('id="subscription-schedule"',markup)
 
     def test_assets_and_publisher_details_are_present(self):
         prof=(ROOT/'dist/professionnels/index.html').read_text(encoding='utf-8')
@@ -49,7 +49,7 @@ class V13Tests(unittest.TestCase):
             self.assertIn('<dt>Édition</dt><dd>Sur le chemin des arts</dd>',markup)
         mentions=(ROOT/'dist/mentions-legales/index.html').read_text(encoding='utf-8')
         self.assertIn('953 755 477 00015',mentions)
-        self.assertIn('Hervélina Vyskoc-Lemoine',mentions)
+        self.assertIn('Valérie Lemoine',mentions)
         self.assertNotIn('Atelier de contenu',(ROOT/'dist/index.html').read_text(encoding='utf-8'))
 
 

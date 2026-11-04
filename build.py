@@ -12,12 +12,13 @@ from publication import Publication, site_url, public_copy
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / 'dist'
 OUT.mkdir(exist_ok=True)
-books = json.loads((ROOT / 'content.json').read_text(encoding='utf-8-sig'))['books']
+catalog = json.loads((ROOT / 'content.json').read_text(encoding='utf-8-sig'))
+books = catalog['books']
 settings = json.loads((ROOT / 'site-settings.json').read_text(encoding='utf-8-sig'))
 paragraphs = json.loads((ROOT / 'textes-brief.json').read_text(encoding='utf-8'))['paragraphs']
 SUMUP = settings['shop_url']
 SITE_URL = site_url(settings)
-VERSION = '1.6.0'
+VERSION = '1.7.0'
 SERIES = 'Les plus grands racontés aux plus petits'
 
 
@@ -77,7 +78,7 @@ def page(path, title, body, description='', active='', extra='', og_description=
     schema = ''
     if structured:
         schema = '<script type="application/ld+json">'+json.dumps(structured, ensure_ascii=False).replace('<', '\\u003c')+'</script>'
-    markup = f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(title)}</title><meta name="description" content="{esc(description)}"><meta name="robots" content="{robots}"><meta name="theme-color" content="#6d3d72"><link rel="canonical" href="{esc(canonical)}"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(og_description or description)}"><meta property="og:url" content="{esc(canonical)}"><meta property="og:type" content="website"><link rel="stylesheet" href="/fonts.css?v={VERSION}"><link rel="stylesheet" href="/style.css?v={VERSION}">{seo_head}{schema}{extra}{analytics}</head><body class="editorial-version"><a class="skip" href="#main">Aller au contenu</a><div class="topline">Les plus grands racontés aux plus petits <span>Dès 5 ans</span></div><header><a class="brand" href="/" aria-label="Accueil"><span class="brand-mark" aria-hidden="true">✳</span><span>Les plus grands<br><em>racontés aux plus petits</em></span></a><button class="menu-toggle" aria-expanded="false" aria-controls="nav">Menu ☰</button><nav id="nav">{nav}<a class="nav-order" href="/livres/">Acheter ↗</a></nav></header><main id="main">{body}</main><footer><div class="footer-top"><a class="brand" href="/">Les plus grands<br><em>racontés aux plus petits</em></a><p>Sur le Chemin des Arts<br>Hervélina Vyskoc et Valérie Lemoine<br>TVA non applicable, article 293 B du CGI</p><div><a href="/offrir/">Offrir</a><a href="/bonus/">Bonus et activités</a><a href="/presse/">Ils parlent de nous</a><a href="/contact/">Contact</a><a href="mailto:contact@lesplusgrandsracontes.fr">contact@lesplusgrandsracontes.fr</a><a href="/livraison/">Livraison et questions</a><a href="https://www.lescompagnonsderoute.com/">Les Compagnons de Route ↗</a><a href="https://www.facebook.com/share/18nftz5tx8/">Facebook ↗</a><a href="https://www.instagram.com/lpgrapp/">Instagram ↗</a></div></div><div class="footer-bottom"><span>© 2026 Sur le Chemin des Arts · V{VERSION}</span><div><a href="/mentions-legales/">Mentions légales</a><a href="/cgv/">CGV</a><a href="/confidentialite/">Confidentialité et cookies</a></div></div></footer><script src="/app.js?v={VERSION}" defer></script><script src="/subscription-rules.js?v={VERSION}" defer></script><script src="/subscription.js?v={VERSION}" defer></script><script src="/newsletter.js?v={VERSION}" defer></script></body></html>'''
+    markup = f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(title)}</title><meta name="description" content="{esc(description)}"><meta name="robots" content="{robots}"><meta name="theme-color" content="#6d3d72"><link rel="canonical" href="{esc(canonical)}"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(og_description or description)}"><meta property="og:url" content="{esc(canonical)}"><meta property="og:type" content="website"><link rel="stylesheet" href="/fonts.css?v={VERSION}"><link rel="stylesheet" href="/style.css?v={VERSION}">{seo_head}{schema}{extra}{analytics}</head><body class="editorial-version"><a class="skip" href="#main">Aller au contenu</a><div class="topline">Les plus grands racontés aux plus petits <span>Dès 5 ans</span></div><header><a class="brand" href="/" aria-label="Accueil"><span class="brand-mark" aria-hidden="true">✳</span><span>Les plus grands<br><em>racontés aux plus petits</em></span></a><button class="menu-toggle" aria-expanded="false" aria-controls="nav">Menu ☰</button><nav id="nav">{nav}<a class="nav-order" href="/livres/">Acheter ↗</a></nav></header><main id="main">{body}</main><footer><div class="footer-top"><a class="brand" href="/">Les plus grands<br><em>racontés aux plus petits</em></a><p>Sur le Chemin des Arts<br>Hervélina Vyskoc et Valérie Lemoine<br>TVA non applicable, article 293 B du CGI</p><div><a href="/offrir/">Offrir</a><a href="/bonus/">Bonus et activités</a><a href="/presse/">Ils parlent de nous</a><a href="/contact/">Contact</a><a href="mailto:contact@lesplusgrandsracontes.fr">contact@lesplusgrandsracontes.fr</a><a href="/livraison/">Livraison et questions</a><a href="https://www.lescompagnonsderoute.com/">Les Compagnons de Route ↗</a><a href="https://www.facebook.com/share/18nftz5tx8/">Facebook ↗</a><a href="https://www.instagram.com/lpgrapp/">Instagram ↗</a></div></div><div class="footer-bottom"><span>© 2026 Sur le Chemin des Arts · V{VERSION}</span><div><a href="/mentions-legales/">Mentions légales</a><a href="/cgv/">CGV</a><a href="/retractation/">Rétractation</a><a href="/confidentialite/">Confidentialité et cookies</a></div></div></footer><script src="/app.js?v={VERSION}" defer></script><script src="/subscription-rules.js?v={VERSION}" defer></script><script src="/subscription.js?v={VERSION}" defer></script><script src="/newsletter.js?v={VERSION}" defer></script></body></html>'''
     target.write_text(publication.media.optimize_html(external_links(markup)), encoding='utf-8')
 
 
@@ -94,6 +95,14 @@ publication = Publication(ROOT, settings, books, SITE_URL)
 render_site(globals())
 page('404', 'Page introuvable', heading('Erreur 404', 'Cette page est introuvable')+link('Retrouver les livres', '/livres/'))
 (OUT / '404.html').write_text((OUT / '404/index.html').read_text(encoding='utf-8'), encoding='utf-8')
-(OUT / 'content.json').write_text(json.dumps({'books': books}, ensure_ascii=False), encoding='utf-8')
+# Retirer les anciennes pages générées des livres/événements supprimés.
+valid_routes={p['route'] for p in publication.pages}
+for folder in ['livres','rencontres','actualites']:
+    for old in (OUT/folder).rglob('index.html'):
+        route=old.parent.relative_to(OUT).as_posix()
+        if route not in valid_routes:
+            old.unlink()
+            if not any(old.parent.iterdir()):old.parent.rmdir()
+(OUT / 'content.json').write_text(json.dumps({'books': books, 'subscription':catalog.get('subscription',{'min_books':3,'max_books':12})}, ensure_ascii=False), encoding='utf-8')
 publication.finalize()
 print(f'{len(publication.pages)} pages générées — V{VERSION} — {SITE_URL}')
