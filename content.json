@@ -121,15 +121,17 @@
       "number": 10,
       "title": "Collector n° 1",
       "slug": "collector-n-1",
-      "available": false,
+      "available": true,
       "price": 16.5,
       "pages": 32,
       "isbn": "9782489192056",
       "color": "#e9a048",
       "cover": "",
-      "description": "",
-      "release_month": "2026-12",
-      "status": "prochain"
+      "description": "test collector n°1",
+      "release_month": "2026-11",
+      "status": "paru",
+      "excerpts": [],
+      "commande_url": ""
     },
     {
       "number": 11,
