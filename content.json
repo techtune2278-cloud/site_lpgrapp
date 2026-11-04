@@ -458,16 +458,16 @@
       "description": "Date communiquée par les auteurs, lieu et organisation à confirmer."
     },
     {
-      "slug": "nouveau-1793817522572",
-      "title": "Marché de Pau",
+      "slug": "nouveau-1793818565945",
+      "title": "marché test",
       "start_date": "2026-11-28",
-      "city": "Pau",
+      "city": "runan",
       "place": "",
-      "confirmed": false,
-      "end_date": "2026-11-27",
+      "confirmed": true,
+      "end_date": "",
       "street": "",
       "postal_code": "",
-      "description": "qdhfhbq",
+      "description": "super marché top ",
       "image": ""
     }
   ],
