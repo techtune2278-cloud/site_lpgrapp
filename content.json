@@ -456,6 +456,19 @@
       "place": "",
       "confirmed": false,
       "description": "Date communiquée par les auteurs, lieu et organisation à confirmer."
+    },
+    {
+      "slug": "nouveau-1793817522572",
+      "title": "Marché de Pau",
+      "start_date": "2026-11-28",
+      "city": "Pau",
+      "place": "",
+      "confirmed": false,
+      "end_date": "2026-11-27",
+      "street": "",
+      "postal_code": "",
+      "description": "qdhfhbq",
+      "image": ""
     }
   ],
   "stores": [
