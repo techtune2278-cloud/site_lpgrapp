@@ -11,7 +11,13 @@
       "color": "#b96c91",
       "cover": "",
       "description": "",
-      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/arthur-rimbaud-les-plus-grands-racontes-aux-plus-petits"
+      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/arthur-rimbaud-les-plus-grands-racontes-aux-plus-petits",
+      "excerpts": [
+        "/assets/extraits/arthur-rimbaud/page-01.webp",
+        "/assets/extraits/arthur-rimbaud/page-02.webp",
+        "/assets/extraits/arthur-rimbaud/page-03.webp",
+        "/assets/extraits/arthur-rimbaud/page-04.webp"
+      ]
     },
     {
       "number": 2,
@@ -24,7 +30,13 @@
       "color": "#e6a34e",
       "cover": "",
       "description": "",
-      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/victor-hugo-les-plus-grands-racontes-aux-plus-petits"
+      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/victor-hugo-les-plus-grands-racontes-aux-plus-petits",
+      "excerpts": [
+        "/assets/extraits/victor-hugo/page-01.webp",
+        "/assets/extraits/victor-hugo/page-02.webp",
+        "/assets/extraits/victor-hugo/page-03.webp",
+        "/assets/extraits/victor-hugo/page-04.webp"
+      ]
     },
     {
       "number": 3,
@@ -37,7 +49,13 @@
       "color": "#ae76ae",
       "cover": "",
       "description": "",
-      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/la-comtesse-de-segur-les-plus-grands-racontes-aux-plus-petits"
+      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/la-comtesse-de-segur-les-plus-grands-racontes-aux-plus-petits",
+      "excerpts": [
+        "/assets/extraits/la-comtesse-de-segur/page-01.webp",
+        "/assets/extraits/la-comtesse-de-segur/page-02.webp",
+        "/assets/extraits/la-comtesse-de-segur/page-03.webp",
+        "/assets/extraits/la-comtesse-de-segur/page-04.webp"
+      ]
     },
     {
       "number": 4,
@@ -50,7 +68,13 @@
       "color": "#77a7a2",
       "cover": "",
       "description": "",
-      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/marcel-proust-les-plus-grands-racontes-aux-plus-petits"
+      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/marcel-proust-les-plus-grands-racontes-aux-plus-petits",
+      "excerpts": [
+        "/assets/extraits/marcel-proust/page-01.webp",
+        "/assets/extraits/marcel-proust/page-02.webp",
+        "/assets/extraits/marcel-proust/page-03.webp",
+        "/assets/extraits/marcel-proust/page-04.webp"
+      ]
     },
     {
       "number": 5,
@@ -63,7 +87,13 @@
       "color": "#7f9d68",
       "cover": "",
       "description": "",
-      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/george-sand-les-plus-grands-racontes-aux-plus-petits"
+      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/george-sand-les-plus-grands-racontes-aux-plus-petits",
+      "excerpts": [
+        "/assets/extraits/george-sand/page-01.webp",
+        "/assets/extraits/george-sand/page-02.webp",
+        "/assets/extraits/george-sand/page-03.webp",
+        "/assets/extraits/george-sand/page-04.webp"
+      ]
     },
     {
       "number": 6,
@@ -76,7 +106,13 @@
       "color": "#789eb7",
       "cover": "",
       "description": "",
-      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/jules-verne-les-plus-grands-racontes-aux-plus-petits"
+      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/jules-verne-les-plus-grands-racontes-aux-plus-petits",
+      "excerpts": [
+        "/assets/extraits/jules-verne/page-01.webp",
+        "/assets/extraits/jules-verne/page-02.webp",
+        "/assets/extraits/jules-verne/page-03.webp",
+        "/assets/extraits/jules-verne/page-04.webp"
+      ]
     },
     {
       "number": 7,
@@ -89,7 +125,13 @@
       "color": "#c27b72",
       "cover": "",
       "description": "",
-      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/emile-zola-les-plus-grands-racontes-aux-plus-petits"
+      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/emile-zola-les-plus-grands-racontes-aux-plus-petits",
+      "excerpts": [
+        "/assets/extraits/emile-zola/page-01.webp",
+        "/assets/extraits/emile-zola/page-02.webp",
+        "/assets/extraits/emile-zola/page-03.webp",
+        "/assets/extraits/emile-zola/page-04.webp"
+      ]
     },
     {
       "number": 8,
@@ -102,7 +144,13 @@
       "color": "#b28f60",
       "cover": "",
       "description": "",
-      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/honore-de-balzac-les-plus-grands-racontes-aux-plus-petits"
+      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/honore-de-balzac-les-plus-grands-racontes-aux-plus-petits",
+      "excerpts": [
+        "/assets/extraits/honore-de-balzac/page-01.webp",
+        "/assets/extraits/honore-de-balzac/page-02.webp",
+        "/assets/extraits/honore-de-balzac/page-03.webp",
+        "/assets/extraits/honore-de-balzac/page-04.webp"
+      ]
     },
     {
       "number": 9,
@@ -115,7 +163,13 @@
       "color": "#a494b8",
       "cover": "",
       "description": "",
-      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/colette-les-plus-grands-racontes-aux-plus-petits"
+      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/colette-les-plus-grands-racontes-aux-plus-petits",
+      "excerpts": [
+        "/assets/extraits/colette/page-01.webp",
+        "/assets/extraits/colette/page-02.webp",
+        "/assets/extraits/colette/page-03.webp",
+        "/assets/extraits/colette/page-04.webp"
+      ]
     },
     {
       "number": 10,
@@ -126,7 +180,7 @@
       "pages": 32,
       "isbn": "9782489192056",
       "color": "#e9a048",
-      "cover": "",
+      "cover": "/assets/couvertures/collector-1.jpg",
       "description": "test collector n°1",
       "release_month": "2026-11",
       "status": "paru",
@@ -144,7 +198,13 @@
       "color": "#9bb297",
       "cover": "",
       "description": "",
-      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/moliere-les-plus-grands-racontes-aux-plus-petits"
+      "commande_url": "https://sur-le-chemin-des-arts.sumupstore.com/product/moliere-les-plus-grands-racontes-aux-plus-petits",
+      "excerpts": [
+        "/assets/extraits/moliere/page-01.webp",
+        "/assets/extraits/moliere/page-02.webp",
+        "/assets/extraits/moliere/page-03.webp",
+        "/assets/extraits/moliere/page-04.webp"
+      ]
     },
     {
       "number": 12,
@@ -436,8 +496,8 @@
       "start_date": "2026-12-20",
       "city": "Plésidy",
       "place": "",
-      "confirmed": false,
-      "description": "Date communiquée par les auteurs, lieu et organisation à confirmer."
+      "confirmed": true,
+      "description": "Rencontrez les auteurs de la collection et faites dédicacer vos livres."
     },
     {
       "slug": "parentis-2027",
@@ -445,8 +505,8 @@
       "start_date": "2027-06-12",
       "city": "Parentis-en-Born",
       "place": "",
-      "confirmed": false,
-      "description": "Date communiquée par les auteurs, lieu et organisation à confirmer."
+      "confirmed": true,
+      "description": "Rencontrez les auteurs de la collection et faites dédicacer vos livres."
     },
     {
       "slug": "roche-calais-2027",
@@ -454,8 +514,8 @@
       "start_date": "2027-06-13",
       "city": "La Roche-Calais",
       "place": "",
-      "confirmed": false,
-      "description": "Date communiquée par les auteurs, lieu et organisation à confirmer."
+      "confirmed": true,
+      "description": "Rencontrez les auteurs de la collection et faites dédicacer vos livres."
     },
     {
       "slug": "nouveau-1793818565945",

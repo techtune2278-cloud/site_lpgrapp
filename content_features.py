@@ -7,10 +7,11 @@ from image_assets import find_images
 
 
 def excerpts(root,book):
-    images=book.get('excerpts') or find_images(root,'extraits/'+book['slug'], '',contains=True)
+    images=book['excerpts'] if 'excerpts' in book else find_images(root,'extraits/'+book['slug'], '',contains=True)
     if not images:return ''
     esc=lambda s:html.escape(str(s),quote=True)
-    return '<section class="section"><h2>Feuilleter</h2><div class="excerpt-grid">'+''.join('<a href="'+esc(src)+'" target="_blank" rel="noopener noreferrer"><img src="'+esc(src)+'" alt="Extrait '+str(i)+' du livre '+esc(book['title'])+'" loading="lazy"><span>Agrandir l’extrait '+str(i)+' ↗</span></a>' for i,src in enumerate(images,1))+'</div></section>'
+    return '<section class="section flipbook-section"><h2>Feuilleter</h2><p>Quatre pages pour découvrir ce livre. Utilisez les flèches, les vignettes ou faites glisser la page.</p><div class="flipbook" data-flipbook aria-label="Feuilleter '+esc(book['title'])+'"><div class="flipbook-stage">'+''.join('<a class="flipbook-page" data-flip-page href="'+esc(src)+'" target="_blank" rel="noopener noreferrer"><img src="'+esc(src)+'" alt="'+esc(book['title'])+' — page de découverte '+str(i)+'" loading="lazy"></a>' for i,src in enumerate(images,1))+'</div><div class="flipbook-controls" hidden><button type="button" data-flip-prev aria-label="Page précédente">←</button><span data-flip-counter role="status" aria-live="polite"></span><button type="button" data-flip-next aria-label="Page suivante">→</button><button type="button" data-flip-zoom>Agrandir la page</button></div><div class="flipbook-thumbs" hidden>'+''.join('<button type="button" data-flip-index="'+str(i-1)+'" aria-label="Afficher la page '+str(i)+'"><img src="'+esc(src)+'" alt="" loading="lazy"><span>'+str(i)+'</span></button>' for i,src in enumerate(images,1))+'</div></div></section>'
+
 
 
 def valid_slug(value):
@@ -35,13 +36,15 @@ def editorial_lists(ctx):
         schema={'@context':'https://schema.org','@type':'Event','name':entry['title'],'startDate':start,'location':place,'url':url,'eventStatus':'https://schema.org/EventScheduled','eventAttendanceMode':'https://schema.org/OfflineEventAttendanceMode','organizer':{'@id':base+'/#organization'}}
         if entry.get('end_date'):
             datetime.fromisoformat(entry['end_date']);schema['endDate']=entry['end_date']
-        body=heading('Rencontres',entry['title'])+'<section class="section copy-section"><p><time datetime="'+esc(start)+'">'+parsed.strftime('%d/%m/%Y')+'</time> · '+esc(entry.get('place') or 'Lieu précis à confirmer')+', '+esc(entry['city'])+'</p>'
+        body=heading('Rencontres',entry['title'])+'<section class="section copy-section"><p><time datetime="'+esc(start)+'">'+parsed.strftime('%d/%m/%Y')+'</time> · '+esc(entry.get('place')+', ' if entry.get('place') else '')+esc(entry['city'])+'</p>'
         if entry.get('description'):body+='<p>'+esc(entry['description'])+'</p>';schema['description']=entry['description']
         if entry.get('image'):
-            body+='<img src="'+esc(entry['image'])+'" alt="'+esc(entry['title'])+'" loading="lazy">';schema['image']=base+entry['image'] if entry['image'].startswith('/') else entry['image']
+            body+='<img src="'+esc(entry['image'])+'" alt="'+esc(entry['title'])+'" loading="lazy">'
+            image=ctx['publication'].media.image(entry['image'])
+            schema['image']=base+image['sizes'][-1]['src'] if image else entry['image']
         body+='</section>'
         page(route,entry['title']+' | Rencontres',body,description=entry['title']+' — '+parsed.strftime('%d/%m/%Y')+'. '+entry.get('description',''),structured=(schema if entry.get('confirmed',True) and entry.get('place') else None),active='Où nous trouver')
-        events.append('<article class="empty-panel"><h2><a href="/'+route+'/">'+esc(entry['title'])+'</a></h2><p>'+parsed.strftime('%d/%m/%Y')+' · '+esc(entry['city'])+('</p>' if entry.get('confirmed',True) else ' · À confirmer</p>')+'</article>')
+        events.append('<article class="event-card">'+('<img src="'+esc(entry['image'])+'" alt="'+esc(entry['title'])+'" loading="lazy">' if entry.get('image') else '')+'<h2><a href="/'+route+'/">'+esc(entry['title'])+'</a></h2><p>'+parsed.strftime('%d/%m/%Y')+' · '+esc(entry['city'])+('</p>' if entry.get('confirmed',True) else ' · À confirmer</p>')+'</article>')
     for entry in catalog.get('news',[]):
         if not all(entry.get(k) for k in ['slug','title','date','text']):continue
         if not valid_slug(entry['slug']):raise ValueError('Slug d’actualité invalide')

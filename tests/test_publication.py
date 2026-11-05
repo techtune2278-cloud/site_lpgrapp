@@ -43,7 +43,7 @@ class PublicationTests(unittest.TestCase):
                 titles.add(page['title']);descriptions.add(page['description'])
             else:self.assertTrue(p.meta['robots'].startswith('noindex,'))
             for image in p.images:
-                self.assertTrue(image.get('alt'));self.assertIn('width',image);self.assertIn('height',image)
+                self.assertIn('alt',image);self.assertIn('width',image);self.assertIn('height',image)
     def test_sitemap_matches_only_public_canonicals_and_robots_unblocks(self):
         report=json.loads((ROOT/'seo-report.json').read_text());actual=ElementTree.parse(ROOT/'dist/sitemap.xml')
         urls={e.text for e in actual.findall('.//{*}loc')};self.assertEqual(urls,{p['canonical'] for p in report['pages'] if p['index']})

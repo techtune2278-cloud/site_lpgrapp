@@ -28,7 +28,7 @@ def find_images(root, folder, *aliases, contains=False):
 def apply_book_images(books, root):
     aliases = {1:'Rimbaud',2:'Hugo',3:'Ségur',4:'Proust',5:'Sand',6:'Verne',7:'Zola',8:'Balzac',9:'Colette',11:'Molière'}
     for book in books:
-        if not book.get('cover'):
+        if not book.get('cover') and not book.get('cover_hidden'):
             matches = find_images(root, 'couvertures', book['title'], book['slug'], aliases.get(book['number'], book['title']))
             if matches:
                 book['cover'] = matches[0]

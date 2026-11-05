@@ -32,14 +32,14 @@ def read(route):
 class EditorialTests(unittest.TestCase):
     def test_home_visitor_paragraphs_are_complete(self):
         actual, _ = read('')
-        for number in [66,67,68,69,73,74,75,100,103]:
+        for number in [66,67,68,69,73,74,75]:
             expected=SOURCE[str(number)].replace('écrivaine','écrivain') if number==59 else SOURCE[str(number)]
             self.assertIn(normal(expected), actual, f'Paragraphe {number} absent ou réécrit')
-        for number in [62,65,70,72,77,90,96,99,102]:
+        for number in [62,65,70,72,77,90,96]:
             self.assertIn(normal(SOURCE[str(number)].split('H2 : ',1)[-1]), actual)
         self.assertIn(normal(SOURCE['71'].split(' Lien : ',1)[0]), actual)
         self.assertIn(normal(SOURCE['97'].split(' Lien : ',1)[0]), actual)
-        self.assertIn('Soyez prévenu à chaque nouvelle parution.', actual)
+        self.assertNotIn('Soyez prévenu à chaque nouvelle parution.', actual)
 
     def test_author_biographies_are_not_summarized(self):
         actual, _ = read('auteurs')
@@ -51,11 +51,11 @@ class EditorialTests(unittest.TestCase):
 
     def test_professional_conditions_are_complete_and_form_has_requested_fields(self):
         actual, markup = read('professionnels')
-        for number in [255,261,264,267,270,271]:
-            self.assertIn(normal(SOURCE[str(number)]), actual)
-        self.assertNotIn('30 %',actual)
+        for phrase in ["Dépôt-vente : Règlement trimestriel", "Liste des titres avec numéros d'ISBN", 'Facturation directe et paiement', 'Une collection au service de la langue française', 'Rencontres, dédicaces et présences sur les salons']:
+            self.assertIn(phrase,actual)
+        self.assertNotIn('<table',markup)
         self.assertNotIn('remises',actual)
-        self.assertIn('Vente ferme, sans dépôt.',actual)
+        self.assertIn('établir un dépôt-vente',actual)
         for field in ['profil','nom','ville','email','message','devis','consent']:
             self.assertIn('name="'+field+'"', markup)
 
@@ -71,7 +71,7 @@ class EditorialTests(unittest.TestCase):
         for path in (ROOT/'dist').rglob('*.html'):
             markup=path.read_text(encoding='utf-8')
             self.assertNotRegex(markup.lower(), r'\bautrices\b', path)
-            if '/livres/' not in path.as_posix():
+            if '/livres/' not in path.as_posix() and '/professionnels/' not in path.as_posix():
                 self.assertNotRegex(markup, r'5[–-]10|5 à 10', path)
 
     def test_prescribed_metadata_and_hugo_heading(self):

@@ -1,5 +1,6 @@
 """Blocs de la priorité 1 : commandes, formulaire, livraison et audio."""
 from html import escape
+from subscription_content import subscription_steps
 from urllib.parse import urlsplit, quote
 
 
@@ -50,8 +51,8 @@ def contact_form(professional=False):
 {quote}<div class="contact-trap" aria-hidden="true"><label>Ne pas remplir ce champ<input name="website" tabindex="-1" autocomplete="off"></label></div>
 <label class="full contact-consent"><input name="consent" type="checkbox" required> <span>J’accepte que les informations saisies soient utilisées pour répondre à ma demande. <a href="/confidentialite/">Confidentialité</a>.</span></label>
 <p class="full muted" id="contact-availability" role="status">Vérification de la disponibilité du formulaire…</p>
-<button class="button primary" type="submit" id="send-message" disabled>Envoyer mon message ↗</button>
-<button class="button light" type="button" id="save-draft">Conserver un brouillon ↓</button>
+<button class="button primary" type="submit" id="send-message">Envoyer mon message ↗</button>
+<a class="button light" id="contact-email" href="mailto:contact@lesplusgrandsracontes.fr">Envoyer par ma messagerie ↗</a><button class="button light" type="button" id="save-draft">Télécharger mon message ↓</button>
 <div id="message-result" class="full" role="status" aria-live="polite" tabindex="-1"></div>
 <noscript><p class="notice full">Activez JavaScript pour utiliser le formulaire.</p></noscript>
 </form>'''
@@ -70,7 +71,7 @@ def shipping_body(settings):
         ('Et pour plus de douze livres ou une commande professionnelle ?', 'Contactez-nous pour un devis adapté. Librairies, bibliothèques, écoles et musées peuvent utiliser le formulaire de l’espace professionnels.'),
         ('Ma commande a un problème ou je souhaite un retour : que faire ?', 'Contactez-nous avec votre référence de commande et la description du problème. Les conditions applicables sont celles consultables dans la boutique au moment de l’achat. Cette FAQ ne remplace pas les conditions générales de vente.'),
     ]
-    faq = ''.join(f'<details><summary>{escape(q)}</summary><p>{escape(a)}</p></details>' for q, a in questions)
+    faq = ''.join('<details><summary>'+escape(q)+'</summary>'+ ('<ol>'+''.join('<li><strong>'+escape(title)+'</strong> '+escape(text)+'</li>' for title,text in subscription_steps(settings.get('_subscription')))+'</ol><p><a href="/offrir/">Composer mon abonnement</a></p>' if q=='Comment fonctionne l’abonnement ?' else '<p>'+escape(a)+'</p>')+'</details>' for q,a in questions)
     return f'''<section class="section shipping-section" id="tarifs"><h2>Les frais de livraison</h2><p>Grille prévue pour les livres de la collection. Le montant et la destination doivent être confirmés dans SumUp avant paiement.</p><div class="table-scroll" tabindex="0" role="region" aria-label="Tarifs de livraison"><table class="shipping-table"><thead><tr><th scope="col">Quantité</th><th scope="col">France — Lettre suivie</th><th scope="col">Europe</th><th scope="col">États-Unis</th></tr></thead><tbody>{rows}</tbody></table></div><p class="muted">Au-delà de 12 livres : sur devis. Le port des abonnements est calculé par colis selon cette grille.</p><a class="underlink" href="/contact/?sujet=Livraison">Une question sur votre livraison ? →</a></section><section class="section faq-section" id="questions"><p class="eyebrow">Avant de commander</p><h2>Vos questions, simplement.</h2><div class="faq-list">{faq}</div></section>'''
 
 

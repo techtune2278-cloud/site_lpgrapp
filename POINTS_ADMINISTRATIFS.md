@@ -1,4 +1,4 @@
-# Informations administratives à compléter — 3 novembre 2026
+# Informations administratives à compléter — 5 novembre 2026
 
 ## Pour activer l’administration de Valérie
 
@@ -42,10 +42,8 @@ Un enregistrement crée une modification de `content.json` dans GitHub. Le dépl
 
 ## Événements et autorisations
 
-- Plésidy : votre document indique le 20 décembre 2026 ; les sources départementales annoncent un salon les 14–15 novembre 2026. Confirmer s’il s’agit d’une autre rencontre. La date de votre document reste enregistrée mais signalée « à confirmer ».
-- Parentis-en-Born : 12 juin 2027 saisi d’après le document ; manifestation, lieu précis et confirmation organisateur à compléter.
-- La Roche-Calais : 13 juin 2027 saisi d’après le document ; orthographe de la commune, manifestation, salle et adresse à confirmer.
-- Dans l’administration, cocher « Informations confirmées » seulement après vérification. Les événements non confirmés ne produisent pas de données structurées Event et leurs pages ne sont pas indexables.
+- Les dates des trois salons sont confirmées selon votre cahier des charges du 4 novembre. Compléter les salles/adresses depuis l’administration sans modifier les dates confirmées.
+- Tout événement de test conservé dans votre catalogue peut être retiré avec Retirer cet élément puis Publier.
 - Conserver les accords écrits pour la citation d’Amélie Nothomb, la photographie de l’enfant, les photos et les reproductions de presse.
 
 ## Domaine et référencement
@@ -54,3 +52,8 @@ Un enregistrement crée une modification de `content.json` dans GitHub. Le dépl
 - Vérifier Search Console, Bing, le sitemap et l’indexation après le déploiement public.
 - Confirmer les anciennes redirections du site Les Compagnons de Route et préserver les QR codes imprimés.
 - Mesurer les performances mobiles sur le site Vercel avec vos médias réels ; aucun score Lighthouse n’est inventé.
+
+## Ajouts V1.8
+
+- `INDEXATION_ENABLED=false` pendant les ajustements ; passer à `true` puis redéployer pour le lancement du référencement. Contrôler aussi `SITE_URL`.
+- Facultatif si les commits admin ne déclenchent pas Vercel : `ADMIN_VERCEL_DEPLOY_HOOK`, URL secrète créée dans les paramètres Git de **sitelpgrapp** pour `main`. Voir MAJ_V1.8.md.

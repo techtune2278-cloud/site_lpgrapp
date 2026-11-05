@@ -1,3 +1,7 @@
+# Version actuelle : V1.8.0
+
+Voir **MAJ_V1.8.md** pour la copie des fichiers, le feuilletage et les réglages Vercel. Aucun installateur n’est nécessaire.
+
 # Les plus grands racontés aux plus petits — V1.7.0
 
 Version de publication. Abonnement libre, réservations et e-mails : **MAJ_V1.7.md**. Installation, domaine, configuration Brevo, référencement et mises à jour : **DEPLOIEMENT_V1.4.md**.

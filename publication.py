@@ -58,8 +58,12 @@ class Publication:
     def description(self,route,provided,title):
         return public_copy(provided or DESCRIPTIONS.get(route,title+' — '+SERIES+'.'))
 
+    def enabled(self):
+        override=os.environ.get('INDEXATION_ENABLED')
+        return override.lower() in ('true','1','yes') if override is not None else self.settings.get('publication_mode','production')=='production'
+
     def indexable(self,route):
-        if self.settings.get('publication_mode','production')!='production' or os.environ.get('VERCEL_ENV')=='preview':return False
+        if not self.enabled() or os.environ.get('VERCEL_ENV')=='preview':return False
         if route in {'atelier','administration','404','autrices','agenda','newsletter-confirmee','faq'}:return False
         if route in self.settings.get('_unconfirmed_routes',[]):return False
         if route=='actualites' and not self.settings.get('_has_news'):return False

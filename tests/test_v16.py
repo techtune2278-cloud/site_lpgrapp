@@ -19,8 +19,8 @@ class V16Tests(unittest.TestCase):
    if tag=='a' and attrs.get('href','').startswith('/livres/') and attrs.get('target'):
     self.assertEqual(attrs['target'],'_blank');self.assertIn('noopener',attrs['rel'])
  def test_catalog_statuses_dates_and_unpublished_pages(self):
-  books=json.loads((ROOT/'dist/content.json').read_text())['books'];self.assertEqual(len([b for b in books if b['status']=='prochain']),10)
-  self.assertEqual({b['number'] for b in books if b['status']=='prochain'},{10,12,13,14,15,16,17,18,19,20})
+  books=json.loads((ROOT/'dist/content.json').read_text())['books'];self.assertEqual(len([b for b in books if b['status']=='prochain']),9)
+  self.assertEqual({b['number'] for b in books if b['status']=='prochain'},{12,13,14,15,16,17,18,19,20})
   catalog=(ROOT/'dist/livres/index.html').read_text()
   for book in books:
    self.assertEqual((ROOT/'dist/livres'/book['slug']/'index.html').is_file(),book['has_page'])
