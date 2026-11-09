@@ -519,19 +519,6 @@
       "place": "",
       "confirmed": true,
       "description": "Rencontrez les auteurs de la collection et faites dédicacer vos livres."
-    },
-    {
-      "slug": "nouveau-1793818565945",
-      "title": "marché test",
-      "start_date": "2026-11-28",
-      "city": "runan",
-      "place": "",
-      "confirmed": true,
-      "end_date": "",
-      "street": "",
-      "postal_code": "",
-      "description": "super marché top ",
-      "image": ""
     }
   ],
   "stores": [
