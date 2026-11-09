@@ -490,6 +490,21 @@
       "color": "#9bb297",
       "cover": "",
       "description": ""
+    },
+    {
+      "number": 34,
+      "title": "Nouveau livre",
+      "slug": "nouveau-1794255316586",
+      "available": false,
+      "price": 15,
+      "pages": 24,
+      "color": "#704575",
+      "description": "",
+      "cover": "",
+      "excerpts": [],
+      "release_month": "",
+      "isbn": "",
+      "commande_url": ""
     }
   ],
   "events": [
