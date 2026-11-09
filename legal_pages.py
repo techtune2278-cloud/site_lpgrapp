@@ -14,7 +14,7 @@ def clean_line(text):
     if text.startswith('Lorsque le consentement est requis') or text.startswith('Une rubrique dédiée') or text.startswith('accepter les cookies') or text.startswith('les refuser aussi') or text.startswith('modifier son choix') or text=='Le visiteur doit pouvoir :':return ''
     if text.startswith('Le site peut utiliser des cookies'):
         return 'Le site utilise des polices hébergées localement. Les liens externes n’intègrent pas de carte ou de vidéo tierce dans la page. Aucun traceur publicitaire n’est installé. Si une mesure d’audience est activée, ses modalités sont précisées sur cette page.'
-    if 'du prestataire de gestion des formulaires' in text:return 'de Brevo, pour les formulaires, accusés de réception et la lettre d’information ;'
+    if 'du prestataire de gestion des formulaires' in text:return 'de Google (Gmail), pour acheminer les demandes et les accusés de réception ;'
     if 'du prestataire de paiement, si' in text:return 'de SumUp pour les achats à l’unité réalisés dans la boutique ; les abonnements sont réglés par virement après facture ;'
     return re.sub(r'\[[^\]]*\]','',text).strip()
 

@@ -9,3 +9,5 @@ __pycache__/
 
 .build-venv/
 seo-report.json
+
+node_modules/

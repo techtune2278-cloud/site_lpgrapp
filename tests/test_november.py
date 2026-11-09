@@ -19,4 +19,4 @@ class NovemberTests(unittest.TestCase):
   html=(ROOT/'dist/auteurs/index.html').read_text();self.assertIn('Hervélina Vyskoc',html);self.assertIn('Valérie Lemoine',html)
   html=(ROOT/'dist/index.html').read_text();self.assertIn('livres illustrés',html);self.assertIn('lire un véritable extrait',html)
   html=(ROOT/'dist/professionnels/index.html').read_text();self.assertIn('<cite>—&nbsp;Amélie Nothomb',html)
-  html=(ROOT/'dist/offrir/index.html').read_text();self.assertIn('name="terms"',html);self.assertIn('name="acknowledge"',html);self.assertIn('name="newsletter"',html)
+  html=(ROOT/'dist/offrir/index.html').read_text();self.assertIn('name="terms"',html);self.assertIn('name="acknowledge"',html);self.assertNotIn('name="newsletter"',html)

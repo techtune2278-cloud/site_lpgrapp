@@ -17,8 +17,8 @@
   for(const {month,book} of current.schedule){const row=document.createElement('li'),date=document.createElement('time');date.dateTime=month;date.textContent=R.monthLabel(month);row.append(date,document.createTextNode(' — '+book.title));schedule.append(row);}
   document.querySelector('#reservation-summary').textContent=current.reserved.length?'Réservations sans paiement, hors calendrier : '+current.reserved.map(x=>x.title).join(', '):'';submit.disabled=busy;
  }
- function request(){if(!current)throw Error(summary.textContent||'Vérifiez votre sélection de livres.');if(!form.checkValidity()){notice('Complétez vos coordonnées et cochez les deux cases obligatoires avant l’envoi.',false);form.reportValidity();return null;}const values=Object.fromEntries(new FormData(form));return {...values,terms:values.terms==='on',acknowledge:values.acknowledge==='on',newsletter:values.newsletter==='on',lines:lines(),reservedIds:reservations(),expectedTotal:current.total,expectedSchedule:R.scheduleKey(current),startedAt};}
- function message(data){return R.summary(current)+`\n\nAcheteur : ${data.nom}\nE-mail : ${data.email}\nFacturation : ${data.billing_address||''}\nDestinataire : ${data.recipient_name||''}\n${data.address||''}\n${data.postal_code||''} ${data.city||''}\nMot pour la carte : ${data.card_message||''}\nCGV acceptées et demande sans paiement comprise. Infolettre : ${data.newsletter?'oui':'non'}`;}
+ function request(){if(!current)throw Error(summary.textContent||'Vérifiez votre sélection de livres.');if(!form.checkValidity()){notice('Complétez vos coordonnées et cochez les deux cases obligatoires avant l’envoi.',false);form.reportValidity();return null;}const values=Object.fromEntries(new FormData(form));return {...values,terms:values.terms==='on',acknowledge:values.acknowledge==='on',lines:lines(),reservedIds:reservations(),expectedTotal:current.total,expectedSchedule:R.scheduleKey(current),startedAt};}
+ function message(data){return R.summary(current)+`\n\nAcheteur : ${data.nom}\nE-mail : ${data.email}\nFacturation : ${data.billing_address||''}\nDestinataire : ${data.recipient_name||''}\n${data.address||''}\n${data.postal_code||''} ${data.city||''}\nMot pour la carte : ${data.card_message||''}\nCGV acceptées et demande sans paiement comprise.`;}
  function prepareContact(data){
   try{sessionStorage.setItem('lpgr-subscription-request',JSON.stringify({subject:'Demande d’abonnement',message:message(data),nom:data.nom,email:data.email}));}catch{}
  }
@@ -35,10 +35,10 @@
   }
   busy=true;submit.disabled=true;contact.hidden=true;notice('Envoi de votre demande…',false);
   try{
-   const r=await fetch('/api/subscription',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data),signal:AbortSignal.timeout(35000)});
+   const r=await fetch('/api/subscription',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data),signal:AbortSignal.timeout(55000)});
    const answer=await r.json().catch(()=>null);
    if(!r.ok||answer?.ok!==true)throw Error(answer?.error||'L’envoi n’a pas pu être confirmé.');
-   notice(answer.message+(answer.newsletterStatus==='confirmation_sent'?' Confirmez séparément votre inscription à l’infolettre dans le message reçu.':answer.newsletterStatus==='unavailable'?' Votre demande est transmise ; l’inscription à l’infolettre n’a pas pu être envoyée.':''));
+   notice(answer.message);
    startedAt=Date.now();
   }catch(error){
    notice((error.name==='TimeoutError'?'L’envoi n’a pas pu être confirmé à temps.':error.message)+' Votre saisie est conservée.');

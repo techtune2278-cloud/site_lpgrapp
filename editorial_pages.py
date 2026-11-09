@@ -147,5 +147,5 @@ def render_site(ctx):
     page('bonus/moliere','Molière : le bonus audio',heading('Tome 11','Lecture d’un texte sous forme d’interprétation théâtrale pour Molière')+audio_body(settings,root))
     render_legal(ctx)
     page('administration','Administration privée — Valérie Lemoine',admin_page(ctx))
-    page('newsletter-confirmee','Lettre d’information',heading('Lettre d’information','Votre demande de confirmation')+'<section class="section copy-section"><p>Si vous venez de confirmer votre inscription depuis le message reçu, elle est enregistrée. Désabonnement possible dans chaque lettre.</p></section>')
+    page('newsletter-confirmee','Lettre d’information',heading('Lettre d’information','Votre demande de confirmation')+'<section class="section copy-section"><p>Les inscriptions à la lettre d’information ne sont pas proposées sur ce site.</p></section>')
     page('atelier','Administration',heading('Administration','L’espace de gestion du site')+link('Ouvrir l’administration','/administration/'),extra='<meta http-equiv="refresh" content="0;url=/administration/">')

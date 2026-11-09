@@ -1,6 +1,6 @@
 {
   "name": "les-plus-grands-racontes",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "private": true,
   "description": "Site vitrine de la collection jeunesse",
   "scripts": {
@@ -10,5 +10,8 @@
   },
   "engines": {
     "node": "22.x"
+  },
+  "dependencies": {
+    "nodemailer": "10.4.0"
   }
 }

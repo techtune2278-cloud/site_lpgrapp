@@ -39,7 +39,7 @@ if(form){
     const data=new FormData(form);const body=Object.fromEntries(data);body.consent=data.get('consent')==='on';body.devis=data.get('devis')==='on';body.startedAt=startedAt;
     sending=true;sendButton.disabled=true;sendButton.textContent='Envoi en cours…';form.setAttribute('aria-busy','true');result.textContent='';
     try{
-      const response=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(15000)});
+      const response=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(28000)});
       let answer;try{answer=await response.json()}catch{throw new Error('L’envoi n’a pas pu être confirmé. Votre texte est conservé.');}
       if(!response.ok||answer.ok!==true)throw new Error(answer.error||'Votre message n’a pas été envoyé. Réessayez plus tard.');
       result.textContent=answer.message;form.reset();startedAt=Date.now();
