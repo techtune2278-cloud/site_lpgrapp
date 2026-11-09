@@ -19,6 +19,7 @@ def render_site(ctx):
     h = lambda number: '<h2>'+esc(t(number).split('H2 : ', 1)[-1])+'</h2>'
     section = lambda number, body, cls='': '<section class="section copy-section '+cls+'" data-section="'+str(number)+'">'+h(number)+body+'</section>'
     quote = lambda: '<blockquote class="nothomb-quote" data-brief="59">« On n&#x27;est jamais trop petit pour découvrir les plus grands. »<br><cite>—&nbsp;Amélie Nothomb, écrivain</cite></blockquote>'
+    collection_quote = '<section class="section copy-section">'+para("En découvrant notre collection, l’écrivaine Amélie Nothomb a salué notre démarche avec ces mots :")+ '<blockquote class="nothomb-quote">'+esc("« On n’est jamais trop petit pour découvrir les plus grands. »")+'</blockquote></section>'
     event_cards, news_cards = editorial_lists(ctx)
     available = [b for b in books if b['available'] and b['number'] not in [10,20,30]]
     collectors = [b for b in books if b['number'] in [10,20,30]]
@@ -49,6 +50,7 @@ def render_site(ctx):
     # Accueil : les onze blocs sont conservés dans l’ordre du document.
     hero_visual = ''.join('<div class="hero-book hb'+str(i)+'">'+cover(books[n], True)+'</div>' for i, n in enumerate([j for j in [1,5,8] if j<len(books)]))
     home = '<section class="hero brief-hero"><div class="hero-copy"><h1>'+esc(t(55).removeprefix('H1 : '))+'</h1>'+para("Les plus Grands racontés aux plus petits, c'est une collection de livres illustrés pour faire découvrir aux enfants, dès 5 ans, les grands auteurs de la littérature française.")+'<div class="actions">'+link('Offrir un abonnement','/offrir/#abonnement')+link('Acheter',shop,'light')+'</div></div><div class="hero-visual"><div class="sunburst"></div>'+hero_visual+'</div></section>'
+    home += collection_quote
     home += section(62,para("Chaque livre invite les jeunes lecteurs à rencontrer un écrivain, à découvrir sa vie, son époque et son univers, puis à lire un véritable extrait de son œuvre. Des jeux, des rubriques amusantes et des découvertes culturelles viennent enrichir cette rencontre.")+para("Au fil des pages, l'enfant apprend à connaître les écrivains, entre dans leur univers et découvre le plaisir des mots et des textes.")+para("Une approche vivante, ludique et accessible, qui respecte l'intelligence des enfants sans simplifier à l'excès les œuvres et les références."))
 
     home += section(65, '<ul class="brief-list">'+''.join('<li data-brief="'+str(n)+'">'+esc(t(n))+'</li>' for n in [66,67,68,69])+'</ul>')
@@ -67,7 +69,7 @@ def render_site(ctx):
     page('', t(53).split(' : ',1)[1], home, description=t(54).split(' : ',1)[1], og_description="On n'est jamais trop petit pour découvrir les plus grands.", structured=organization)
 
     # Collection et prévisions de parution, avec les trois numéros Collector.
-    catalog = heading('La collection', 'Les plus grands racontés aux plus petits', t(63))
+    catalog = heading('La collection', 'Les plus grands racontés aux plus petits', t(63))+collection_quote
     catalog += '<figure class="subscription-fan"><img src="/assets/photos/collection-livres-eventail.jpeg" alt="Les dix livres parus de la collection disposés en éventail" width="1824" height="1373" loading="lazy"></figure>'
     catalog += '<section class="section catalog-section"><div class="filter-bar" role="group" aria-label="Filtrer les livres"><button class="filter active" data-filter="available" aria-pressed="true">Disponibles · '+str(len(available))+'</button><button class="filter" data-filter="future" aria-pressed="false">À paraître · '+str(len(future))+'</button><button class="filter" data-filter="all" aria-pressed="false">Toute la collection · '+str(len(available)+len(future))+'</button><label class="search-label">Chercher un auteur<input id="book-search" type="search" placeholder="Hugo, Colette…"></label></div><div class="book-grid catalog">'
     catalog += ''.join('<div data-book data-status="'+('available' if b['available'] else 'future')+'" data-title="'+esc(b['title'])+'" '+('hidden' if not b['available'] else '')+'>'+cards([b])+'</div>' for b in books if b['number'] not in [10,20,30])

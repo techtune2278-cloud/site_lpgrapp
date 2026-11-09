@@ -11,8 +11,11 @@ def read(route):
 class V15Tests(unittest.TestCase):
  def test_new_subscription_copy_prices_and_removed_sentences(self):
   markup,text,p=read('offrir')
-  for phrase in ['Choisir vos livres','Mois et composition des colis',"jusqu'à 3 livres par envoi",'virement']:
+  for phrase in ['Choisir vos livres','Envois prévus','un livre par mois d’envoi','virement']:
    self.assertIn(phrase,text)
+  self.assertIn('/contact/?sujet=Calendrier%20de%20mon%20abonnement', markup)
+  self.assertNotIn('auto-parcels', markup)
+  self.assertNotIn('subscription-parcels', markup)
   for route in ['offrir','cgv','livraison','faq']:
    markup,text,_=read(route)
    for phrase in ['120 €','30 € de port','au même prix','Une offre simple, sans remise','Aucune remise sur les livres (prix unique du livre)']:

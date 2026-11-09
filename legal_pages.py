@@ -10,10 +10,6 @@ def clean_line(text):
     if text.startswith('Adresse postale :'):return 'Adresse postale : '+MED+'.'
     if text.startswith('Site internet dédié à la médiation :'):return 'Site internet dédié à la médiation : https://www.medconsodev.eu/.'
     if text.startswith('Demandes de contact sans suite commerciale'):return 'Demandes de contact sans suite commerciale : trois ans après le dernier échange.'
-    if 'un livre en attente dans un colis groupé ne peut être conservé plus de trois mois' in text:return 'Le client choisit le mois d’envoi de chaque ouvrage. Ce mois ne peut pas être antérieur à la parution annoncée ; tous les livres d’un même colis ont le même mois d’envoi.'
-    if 'Les livres déjà parus peuvent être expédiés dès' in text:return 'Les livres déjà parus sont expédiés après paiement, au mois choisi pour l’abonnement. Les achats à l’unité sont expédiés selon les conditions de la boutique.'
-    if text.startswith('Les livres déjà parus sont expédiés dans un délai'):return 'Pour un départ immédiat, les livres déjà parus sont expédiés sous cinq jours ouvrés suivant le paiement ; pour un abonnement planifié, ils sont expédiés au mois choisi.'
-    if text.startswith('Les colis contenant des livres à paraître sont expédiés'):return 'Les colis contenant des livres à paraître sont expédiés dans les dix jours suivant la parution du dernier livre du colis, ou au mois ultérieur choisi par le client.'
     if 'de 3 à 12 livres parmi' in text:return text.replace('livres parmi','exemplaires (plusieurs exemplaires d’un même titre sont possibles) parmi')
     if 'Pour une commande comprenant plusieurs biens livrés séparément' in text:return text
     if text.startswith('Lorsque le consentement est requis') or text.startswith('Une rubrique dédiée') or text.startswith('accepter les cookies') or text.startswith('les refuser aussi') or text.startswith('modifier son choix') or text=='Le visiteur doit pouvoir :':return ''

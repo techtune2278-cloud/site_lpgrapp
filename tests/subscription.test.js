@@ -1,7 +1,23 @@
-const test=require('node:test'),assert=require('node:assert/strict');const {quote,summary}=require('../lib/subscription-rules');
-const catalog=Array.from({length:20},(_,i)=>({number:i+1,title:'Livre '+(i+1),price:i<2?9:15,status:'paru',available:true,subscription_payable:true,release_month:''}));catalog.push({number:21,title:'Collector',price:16.5,available:false,release_month:'2027-12',subscription_payable:true});
-const lines=(n,group=3)=>Array.from({length:n},(_,i)=>({number:i+3,quantity:1,month:'2026-11',parcel:Math.floor(i/group)+1}));
-test('Six livres : colis de 1, 2 ou 3 et frais conformes',()=>{for(const [g,p,t] of [[1,27,117],[2,21,111],[3,14,104]]){const q=quote(catalog,lines(6,g),[],{},'2026-11');assert.equal(q.shipping,p);assert.equal(q.total,t);}});
-test('Exemplaires multiples, limite sur exemplaires et Collector à 16,50',()=>{let q=quote(catalog,[{number:1,quantity:3,month:'2026-11',parcel:1}],[],{},'2026-11');assert.equal(q.total,34);q=quote(catalog,[{number:21,quantity:3,month:'2027-12',parcel:1}],[],{},'2026-11');assert.equal(q.total,56.5);assert.throws(()=>quote(catalog,lines(2),[],{},'2026-11'));assert.throws(()=>quote(catalog,lines(13),[],{},'2026-11'));assert.throws(()=>quote(catalog,[{number:1,quantity:4,month:'2026-11',parcel:1}],[],{},'2026-11'));});
-test('Mois choisi librement après parution ; dates trop précoces et colis incohérents refusés',()=>{assert.throws(()=>quote(catalog,[{number:21,quantity:3,month:'2027-11',parcel:1}],[],{},'2026-11'));assert.equal(quote(catalog,[{number:21,quantity:3,month:'2028-06',parcel:1}],[],{},'2026-11').parcels[0].month,'2028-06');assert.throws(()=>quote(catalog,[{number:1,quantity:2,month:'2027-01',parcel:1},{number:2,quantity:1,month:'2027-02',parcel:1}],[],{},'2026-11'));});
-test('Réservations sans date exclues du paiement ; historique du choix dans le résumé',()=>{const b={number:30,title:'À réserver',subscription_payable:false};const q=quote([...catalog,b],[],[30],{},'2026-11');assert.equal(q.total,0);assert.match(summary(q),/sans paiement/);assert.match(summary(q),/virement/);assert.equal(quote(catalog,lines(2),[],{min_books:2,max_books:20},'2026-11').paid.length,2);});
+const test=require('node:test'),assert=require('node:assert/strict');
+const {quote,summary,scheduleKey,currentMonth}=require('../lib/subscription-rules');
+const catalog=Array.from({length:12},(_,i)=>({number:i+1,title:'Livre '+(i+1),price:i<2?9:15,available:true,subscription_payable:true}));
+catalog.push({number:21,title:'Collector',price:16.5,available:false,release_month:'2027-03',subscription_payable:true},{number:30,title:'À réserver',subscription_payable:false});
+test('Six livres, six mois et six frais d’envoi, y compris le passage à janvier',()=>{
+ const q=quote(catalog,Array.from({length:6},(_,i)=>({number:i+3,quantity:1})),[],{},'2026-11');
+ assert.deepEqual(q.schedule.map(x=>x.month),['2026-11','2026-12','2027-01','2027-02','2027-03','2027-04']);
+ assert.equal(q.shipping,27);assert.equal(q.total,117);
+});
+test('Livres parus d’abord, pause jusqu’à la parution, aucun mois imposé par le client',()=>{
+ const q=quote(catalog,[{number:21,quantity:2,month:'2026-01',parcel:1},{number:1,quantity:1}],[],{},'2026-11');
+ assert.equal(scheduleKey(q),'[[1,"2026-11"],[21,"2027-03"],[21,"2027-04"]]');
+ assert.match(summary(q),/mars 2027/);assert.equal(q.total,55.5);
+ const future=quote(catalog,[{number:21,quantity:3}],[],{},'2026-11');
+ assert.equal(future.schedule[0].month,'2027-03');assert.equal(future.schedule.at(-1).month,'2027-05');
+});
+test('Bornes de quantité et réservation sans date hors total et calendrier',()=>{
+ assert.throws(()=>quote(catalog,[{number:1,quantity:2}],[],{},'2026-11'));
+ assert.throws(()=>quote(catalog,[{number:1,quantity:12},{number:2,quantity:1}],[],{},'2026-11'));
+ const q=quote(catalog,[],[30],{},'2026-11');assert.equal(q.total,0);assert.equal(q.schedule.length,0);
+ assert.match(summary(q),/Réservations sans paiement/);
+ assert.equal(currentMonth(new Date('2026-11-30T23:30:00Z')),'2026-12');
+});

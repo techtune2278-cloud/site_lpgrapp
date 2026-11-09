@@ -19,9 +19,12 @@ class V18Tests(unittest.TestCase):
    self.assertNotRegex(html.read_text(),r'\bJohn\b|Dans ce livre|Disponible chez votre libraire')
  def test_home_stops_before_press_and_notify_opens_contact(self):
   home=(ROOT/'dist/index.html').read_text().split('<main id="main">')[1].split('</main>')[0]
-  for phrase in ['Ils parlent de nous','Lettre d’information','nothomb-quote']:self.assertNotIn(phrase,home)
+  for phrase in ['Ils parlent de nous','Lettre d’information']:self.assertNotIn(phrase,home)
   catalog=(ROOT/'dist/livres/index.html').read_text();self.assertIn('/contact/?sujet=Parution%20-',catalog)
   self.assertNotIn('/offrir/?reserver=',catalog)
+  for page in [home,catalog]:
+   self.assertIn('En découvrant notre collection, l’écrivaine Amélie Nothomb',page)
+   self.assertIn('On n’est jamais trop petit pour découvrir les plus grands.',page)
  def test_indexation_switch_and_confirmed_events(self):
   for path in (ROOT/'dist').rglob('index.html'):self.assertIn('content="noindex,nofollow"',path.read_text())
   with patch.dict(os.environ,{'INDEXATION_ENABLED':'true'}):
