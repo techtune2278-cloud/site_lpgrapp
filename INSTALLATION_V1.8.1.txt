@@ -1,0 +1,12 @@
+Depuis main, dépôt propre : git pull --rebase origin main.
+Copiez les fichiers du ZIP dans le dépôt. Le catalogue content.json est exclu.
+Vercel régénère les pages à partir du catalogue présent sur GitHub.
+
+Commandes après la copie :
+
+git add -- build.py dist/subscription.js editorial_pages.py legal-documents.json legal_pages.py lib/subscription-rules.js lib/subscription-service.js package-lock.json package.json site_features.py subscription_content.py tests/subscription-service.test.js tests/subscription.test.js tests/test_editorial.py tests/test_v15.py tests/test_v18.py
+git commit -m "V1.8.1 - Abonnement mensuel et citation Nothomb"
+git pull --rebase origin main
+git push origin main
+
+En cas de conflit, arrêtez-vous avant le push.

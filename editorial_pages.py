@@ -13,6 +13,7 @@ def render_site(ctx):
     root, books, settings = ctx['ROOT'], ctx['books'], ctx['settings']
     t, esc, page, cards, cover = (ctx[k] for k in ['text', 'esc', 'page', 'cards', 'cover'])
     heading, link, book_title = (ctx[k] for k in ['heading', 'link', 'book_title'])
+    is_collector = ctx['is_collector']
     shop, series, base = ctx['SUMUP'], ctx['SERIES'], ctx['SITE_URL']
     p = lambda number: '<p data-brief="'+str(number)+'">'+esc(t(number))+'</p>'
     para = lambda value: '<p>'+esc(value)+'</p>'
@@ -21,9 +22,9 @@ def render_site(ctx):
     quote = lambda: '<blockquote class="nothomb-quote" data-brief="59">« On n&#x27;est jamais trop petit pour découvrir les plus grands. »<br><cite>—&nbsp;Amélie Nothomb, écrivain</cite></blockquote>'
     collection_quote = '<section class="section copy-section">'+para("En découvrant notre collection, l’écrivaine Amélie Nothomb a salué notre démarche avec ces mots :")+ '<blockquote class="nothomb-quote">'+esc("« On n’est jamais trop petit pour découvrir les plus grands. »")+'</blockquote></section>'
     event_cards, news_cards = editorial_lists(ctx)
-    available = [b for b in books if b['available'] and b['number'] not in [10,20,30]]
-    collectors = [b for b in books if b['number'] in [10,20,30]]
-    future = [b for b in books if not b['available'] and b['number'] not in [10,20,30]]
+    available = [b for b in books if b['available'] and not is_collector(b)]
+    collectors = [b for b in books if is_collector(b)]
+    future = [b for b in books if not b['available'] and not is_collector(b)]
     photo_alt = 'Hervélina Vyskoc et Valérie Lemoine, auteurs de la collection, au Festival du Livre de Paris'
     photo = '<div class="photo-placeholder" role="img" aria-label="'+photo_alt+'"><span aria-hidden="true">✳</span><p>Hervélina Vyskoc et Valérie Lemoine</p></div>'
     photo = portraits(root, esc) or photo
@@ -72,7 +73,7 @@ def render_site(ctx):
     catalog = heading('La collection', 'Les plus grands racontés aux plus petits', t(63))+collection_quote
     catalog += '<figure class="subscription-fan"><img src="/assets/photos/collection-livres-eventail.jpeg" alt="Les dix livres parus de la collection disposés en éventail" width="1824" height="1373" loading="lazy"></figure>'
     catalog += '<section class="section catalog-section"><div class="filter-bar" role="group" aria-label="Filtrer les livres"><button class="filter active" data-filter="available" aria-pressed="true">Disponibles · '+str(len(available))+'</button><button class="filter" data-filter="future" aria-pressed="false">À paraître · '+str(len(future))+'</button><button class="filter" data-filter="all" aria-pressed="false">Toute la collection · '+str(len(available)+len(future))+'</button><label class="search-label">Chercher un auteur<input id="book-search" type="search" placeholder="Hugo, Colette…"></label></div><div class="book-grid catalog">'
-    catalog += ''.join('<div data-book data-status="'+('available' if b['available'] else 'future')+'" data-title="'+esc(b['title'])+'" '+('hidden' if not b['available'] else '')+'>'+cards([b])+'</div>' for b in books if b['number'] not in [10,20,30])
+    catalog += ''.join('<div data-book data-status="'+('available' if b['available'] else 'future')+'" data-title="'+esc(b['title'])+'" '+('hidden' if not b['available'] else '')+'>'+cards([b])+'</div>' for b in books if not is_collector(b))
     catalog += '</div><p id="empty-results" hidden>Aucun auteur ne correspond à votre recherche.</p></section>'
     catalog += '<section class="section copy-section"><h2>Les numéros Collector</h2>'+para("Après chaque série de neuf titres, un numéro Collector vient enrichir la collection. Avec ses 32 pages, il propose de nouveaux jeux et des rubriques interactives pour revenir sur la vie et l'œuvre des écrivains découverts dans les neuf livres précédents.")+para("Le Collector permet également d'approfondir certains thèmes abordés dans les livres, de faire appel à la mémoire des jeunes lecteurs et de prolonger leurs découvertes par de nouvelles activités.")+para("Il fait pleinement partie de la collection : une façon amusante de retrouver les auteurs déjà rencontrés et de poursuivre l'aventure littéraire.")+'<div class="book-grid collectors-grid">'+cards(collectors)+'</div>'+'<p>Prix des Collectors : 16,50 €.</p></section>'
     page('livres','La collection de livres jeunesse dès 5 ans',catalog,active='La collection',structured={'@context':'https://schema.org','@type':'BookSeries','name':series,'inLanguage':'fr'})
@@ -91,7 +92,7 @@ def render_site(ctx):
     deposit={1:'décembre 2025',2:'décembre 2025',3:'février 2026',4:'février 2026',5:'avril 2026',6:'avril 2026',7:'juin 2026',8:'juillet 2026',9:'juillet 2026',10:'octobre 2026',11:'août 2026'}
     for index,b in enumerate(books):
         if not b['has_page']:continue
-        bt=book_title(b); available_now=b['available']; collector=b['number'] in [10,20,30]
+        bt=book_title(b); available_now=b['available']; collector=is_collector(b)
         meta=f'Découvrez {b["title"]} avec les enfants dès 5 ans : sa vie, un extrait de son œuvre, des jeux. Livre carré 18×18, tome {b["number"]} de la collection. {b["pages"]} pages, {b["price"]} €.' if available_now else 'Les plus grands racontés aux plus petits · '+bt+' · À paraître.'
         if b['number']==2:meta=t(156).split(' : ',1)[1]
         price=str(b['price']).replace('.',',')+' €' if available_now else (str(b['price']).replace('.',',')+' € — À paraître')
@@ -118,7 +119,7 @@ def render_site(ctx):
     prof+='<nav class="public-nav" aria-label="Publics professionnels">'+''.join('<a href="#'+anchor+'">'+esc(label)+'</a>' for anchor,label in publics)+'</nav>'
     prof+='<section class="section copy-section" id="libraires"><h2>Librairies</h2>'+para("Dépôt-vente : Règlement trimestriel par virement (sur présentation de l'état des ventes), dépôt de 6 mois, reprise des invendus avec 10 jours de préavis.")+para('Commandes possibles via Dilicom (référencé via CyberScribe) ou en direct.')+para("N'hésitez pas à nous écrire pour recevoir le bon de commande complet et la liste de nos numéros d'ISBN.")+'</section>'
     prof+='<section class="section copy-section" id="bibliotheques"><h2>Bibliothèques & médiathèques</h2>'+para("Liste des titres avec numéros d'ISBN et prix public sur simple demande.")+para('Établissement de devis sur mesure (sur présentation de votre bon de commande).')+para('Facturation directe et paiement par virement bancaire ou chèque à réception.')+'</section>'
-    prof+='<section class="section copy-section" id="ecoles"><h2>Alliances françaises et écoles</h2><h3>Une collection au service de la langue française</h3>'+para('Les ouvrages constituent un support pédagogique permettant :')+'<ul><li>de sensibiliser les enfants à la richesse de la langue française ;</li><li>de découvrir les grands auteurs qui ont façonné l’imaginaire collectif ;</li><li>de créer un premier lien avec les œuvres littéraires classiques ;</li></ul><p><a class="button light" href="/assets/documents/dossier-alliances-francaises-lpgrapp.pdf" download>Télécharger le dossier pour les Alliances françaises (PDF)</a></p></section>'
+    prof+='<section class="section copy-section" id="ecoles"><h2>Alliances françaises et écoles</h2><h3>Une collection au service de la langue française</h3>'+para('Les ouvrages constituent un support pédagogique permettant :')+'<ul><li>de sensibiliser les enfants à la richesse de la langue française ;</li><li>de découvrir les grands auteurs qui ont façonné l’imaginaire collectif ;</li><li>de créer un premier lien avec les œuvres littéraires classiques ;</li></ul></section>'
     prof+='<section class="section copy-section" id="musees"><h2>Musées & Maisons d’écrivains</h2>'+para("Transmettre la littérature aux enfants, c'est aussi aller à la rencontre des grands auteurs là où ils ont vécu !")+para("Adaptés aux 5-10 ans, nos albums de la collection Les plus Grands racontés aux plus Petits allient rigueur historique et jeux ludiques. Ils offrent le prolongement idéal de la visite dans les boutiques de sites patrimoniaux et lieux de mémoire.")+para("Vous gérez la boutique d'un site culturel ou des animations jeunesse ? Contactez-nous pour recevoir un spécimen, établir un dépôt-vente ou concevoir une animation sur mesure.")+'<figure class="museum-photo"><img src="/assets/photos/musee-jules-verne-nantes.jpg" alt="Le livre Jules Verne dans la boutique du musée de Nantes" loading="lazy"><figcaption>Le livre Jules Verne dans la boutique du musée de Nantes.</figcaption></figure></section>'
     prof+='<section class="section copy-section" id="salons"><h2>Rencontres, dédicaces et présences sur les salons</h2>'+para("Parce que nos livres prennent tout leur sens au contact des lecteurs, nous adorons aller sur le terrain ! Présents sur de nombreux salons littéraires, marchés artisanaux et événements culturels, nous privilégions la proximité, la convivialité et l'échange direct avec le public.")+para("Vous organisez un salon jeunesse, un marché local, une fête du livre ou un événement en médiathèque ? Contactez-nous pour réserver notre venue ou planifier une intervention.")+link('Écrivez-nous','/contact/','text')+'</section>'
     prof+='<section class="section form-section"><h2>Formulaire de contact</h2><p>Un projet de rencontre ? Parlez-nous en</p>'+contact_form(professional=True)+'</section>'

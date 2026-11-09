@@ -1,0 +1,25 @@
+V1.8.3 — envoi via Gmail
+
+1. Depuis le dossier du site vitrine, sur main avec un dépôt propre : git pull --rebase origin main
+2. Copiez les fichiers de ce ZIP à la racine du dépôt, en conservant les dossiers.
+   Le catalogue content.json n’est pas livré et ne doit pas être remplacé.
+3. Retirez les anciens fichiers et publiez le code :
+
+git rm --ignore-unmatch -- api/newsletter.js lib/newsletter-service.js dist/newsletter.js tests/newsletter.test.js
+git add -- .env.example .gitignore build.py dist/app.js dist/subscription.js editorial_pages.py legal-documents.json legal_pages.py lib/contact-service.js lib/subscription-rules.js lib/subscription-service.js package-lock.json package.json site_features.py subscription_content.py tests/contact.test.js tests/subscription-service.test.js tests/subscription.test.js tests/test_editorial.py tests/test_november.py tests/test_v15.py tests/test_v18.py vercel.json lib/gmail-mailer.js tests/gmail-mailer.test.js
+git commit -m "V1.8.3 - Envoi Gmail pour les formulaires"
+git pull --rebase origin main
+git push origin main
+
+En cas de conflit, arrêtez-vous avant le push.
+Vercel installe Nodemailer via package-lock.json et régénère les pages.
+
+Dans Google : activez la validation en deux étapes puis créez un mot de passe d’application à https://myaccount.google.com/apppasswords, nommé Site LPGR.
+Dans Vercel > sitelpgrapp > Settings > Environment Variables > Production :
+GMAIL_USER = ton adresse Gmail complète (expéditeur et destinataire par défaut)
+GMAIL_APP_PASSWORD = le code Google à 16 caractères (pas le mot de passe de connexion)
+CONTACT_TO_EMAIL = facultatif. S’il existe déjà, mettez votre Gmail ou retirez la variable pour recevoir les demandes dans Gmail.
+
+Les anciennes variables Brevo et CONTACT_FROM_EMAIL ne sont plus utilisées.
+Une fois ces variables créées, déployez la V1.8.3. Si la V1.8.3 est déjà déployée, redéployez-la pour appliquer les variables.
+Testez d’abord le formulaire de contact, puis une demande d’abonnement avec une deuxième adresse que vous contrôlez. Vérifiez la demande côté éditeur et l’accusé côté client, avec les CGV.

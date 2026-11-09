@@ -22,7 +22,7 @@ settings['_subscription']=catalog.get('subscription',{'min_books':3,'max_books':
 paragraphs = json.loads((ROOT / 'textes-brief.json').read_text(encoding='utf-8'))['paragraphs']
 SUMUP = settings['shop_url']
 SITE_URL = site_url(settings)
-VERSION = '1.8.3'
+VERSION = '1.8.5'
 SERIES = 'Les plus grands racontés aux plus petits'
 
 
@@ -42,8 +42,12 @@ def link(label, url, kind='primary'):
     return f'<a class="button {kind}" href="{esc(url)}">{esc(label)} <span aria-hidden="true">↗</span></a>'
 
 
+def is_collector(book):
+    return book['number'] in (10, 20, 30) or book['slug'].startswith('collector-') or book['title'].strip().casefold().split(' ', 1)[0] == 'collector'
+
+
 def book_title(book):
-    if book['number'] in [10, 20, 30]:
+    if is_collector(book):
         return book['title']
     feminine = book['number'] in [3, 5, 9, 26, 27]
     return book['title'] + (' racontée aux enfants' if feminine else ' raconté aux enfants')
@@ -51,7 +55,7 @@ def book_title(book):
 
 def cover(book, hero=False):
     title = book_title(book)
-    alt = book.get('cover_alt') or ('Couverture du Collector n° '+str(book['number']//10)+' : portraits des neuf auteurs' if book['number'] in [10,20,30] else f'{book["title"]} — couverture illustrée du tome {book["number"]}')
+    alt = book.get('cover_alt') or (f'Couverture du {book["title"].strip()}' if is_collector(book) else f'{book["title"]} — couverture illustrée du tome {book["number"]}')
     if book.get('cover'):
         return f'<img class="real-cover {"cover-hero" if hero else ""}" src="{esc(book["cover"])}" alt="{esc(alt)}" width="720" height="720" loading="lazy">'
     return f'<div class="book-cover {"big" if hero else ""}" style="--book:{esc(book["color"])}" role="img" aria-label="{esc(alt)}"><span class="series">Les plus grands racontés<br>aux plus petits</span><div class="cover-art"><span class="orbit" aria-hidden="true">✳</span><span class="initial">{esc(book["title"].split()[-1][0])}</span></div><strong>{esc(book["title"])}</strong><span class="cover-bottom">N° {book["number"]:02}</span></div>'
