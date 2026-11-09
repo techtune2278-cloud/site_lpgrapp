@@ -22,7 +22,7 @@ settings['_subscription']=catalog.get('subscription',{'min_books':3,'max_books':
 paragraphs = json.loads((ROOT / 'textes-brief.json').read_text(encoding='utf-8'))['paragraphs']
 SUMUP = settings['shop_url']
 SITE_URL = site_url(settings)
-VERSION = '1.8.1'
+VERSION = '1.8.2'
 SERIES = 'Les plus grands racontés aux plus petits'
 
 

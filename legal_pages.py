@@ -10,7 +10,6 @@ def clean_line(text):
     if text.startswith('Adresse postale :'):return 'Adresse postale : '+MED+'.'
     if text.startswith('Site internet dédié à la médiation :'):return 'Site internet dédié à la médiation : https://www.medconsodev.eu/.'
     if text.startswith('Demandes de contact sans suite commerciale'):return 'Demandes de contact sans suite commerciale : trois ans après le dernier échange.'
-    if 'de 3 à 12 livres parmi' in text:return text.replace('livres parmi','exemplaires (plusieurs exemplaires d’un même titre sont possibles) parmi')
     if 'Pour une commande comprenant plusieurs biens livrés séparément' in text:return text
     if text.startswith('Lorsque le consentement est requis') or text.startswith('Une rubrique dédiée') or text.startswith('accepter les cookies') or text.startswith('les refuser aussi') or text.startswith('modifier son choix') or text=='Le visiteur doit pouvoir :':return ''
     if text.startswith('Le site peut utiliser des cookies'):

@@ -9,7 +9,7 @@ const form=document.querySelector('#contact-form');
 if(form){
   const subject=new URLSearchParams(location.search).get('sujet');
   if(subject)form.elements.sujet.value=subject.slice(0,160);
-  if(subject==='abonnement-personnalise'){try{const saved=JSON.parse(sessionStorage.getItem('lpgr-subscription-request')||'null');if(saved&&typeof saved.subject==='string'&&typeof saved.message==='string'){form.elements.sujet.value=saved.subject.slice(0,160);form.elements.message.value=saved.message.slice(0,5000);sessionStorage.removeItem('lpgr-subscription-request')}}catch{}}
+  if(subject==='abonnement-personnalise'){try{const saved=JSON.parse(sessionStorage.getItem('lpgr-subscription-request')||'null');if(saved&&typeof saved.subject==='string'&&typeof saved.message==='string'){form.elements.sujet.value=saved.subject.slice(0,160);form.elements.message.value=saved.message.slice(0,5000);if(typeof saved.nom==='string')form.elements.nom.value=saved.nom.slice(0,120);if(typeof saved.email==='string')form.elements.email.value=saved.email.slice(0,254);document.querySelector('#message-result').textContent='Votre demande est préremplie. Vérifiez-la puis envoyez le formulaire pour la transmettre.';sessionStorage.removeItem('lpgr-subscription-request')}}catch{}}
   let startedAt=Date.now();let enabled=false;let sending=false;
   const sendButton=document.querySelector('#send-message');
   const result=document.querySelector('#message-result');

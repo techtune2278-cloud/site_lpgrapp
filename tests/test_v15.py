@@ -14,6 +14,9 @@ class V15Tests(unittest.TestCase):
   for phrase in ['Choisir vos livres','Envois prévus','un livre par mois d’envoi','virement']:
    self.assertIn(phrase,text)
   self.assertIn('/contact/?sujet=Calendrier%20de%20mon%20abonnement', markup)
+  self.assertNotIn('data-quantity', markup)
+  self.assertNotIn('possibilité de choisir plusieurs exemplaires', text)
+  self.assertIn('id="subscription-contact"', markup)
   self.assertNotIn('auto-parcels', markup)
   self.assertNotIn('subscription-parcels', markup)
   for route in ['offrir','cgv','livraison','faq']:

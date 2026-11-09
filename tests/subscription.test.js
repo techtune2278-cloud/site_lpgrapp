@@ -8,14 +8,15 @@ test('Six livres, six mois et six frais d’envoi, y compris le passage à janvi
  assert.equal(q.shipping,27);assert.equal(q.total,117);
 });
 test('Livres parus d’abord, pause jusqu’à la parution, aucun mois imposé par le client',()=>{
- const q=quote(catalog,[{number:21,quantity:2,month:'2026-01',parcel:1},{number:1,quantity:1}],[],{},'2026-11');
- assert.equal(scheduleKey(q),'[[1,"2026-11"],[21,"2027-03"],[21,"2027-04"]]');
- assert.match(summary(q),/mars 2027/);assert.equal(q.total,55.5);
- const future=quote(catalog,[{number:21,quantity:3}],[],{},'2026-11');
- assert.equal(future.schedule[0].month,'2027-03');assert.equal(future.schedule.at(-1).month,'2027-05');
+ const q=quote(catalog,[{number:21,month:'2026-01',parcel:1},{number:1},{number:2}],[],{},'2026-11');
+ assert.equal(scheduleKey(q),'[[1,"2026-11"],[2,"2026-12"],[21,"2027-03"]]');
+ assert.match(summary(q),/mars 2027/);assert.equal(q.total,48);
+ const future=quote(catalog,[{number:21}],[],{min_books:1},'2026-11');
+ assert.equal(future.schedule[0].month,'2027-03');assert.equal(future.schedule.length,1);
 });
 test('Bornes de quantité et réservation sans date hors total et calendrier',()=>{
- assert.throws(()=>quote(catalog,[{number:1,quantity:2}],[],{},'2026-11'));
+ assert.throws(()=>quote(catalog,[{number:1,quantity:2}],[],{},'2026-11'),/Un seul exemplaire/);
+ assert.throws(()=>quote(catalog,[{number:1},{number:1},{number:2}],[],{},'2026-11'),/Un seul exemplaire/);
  assert.throws(()=>quote(catalog,[{number:1,quantity:12},{number:2,quantity:1}],[],{},'2026-11'));
  const q=quote(catalog,[],[30],{},'2026-11');assert.equal(q.total,0);assert.equal(q.schedule.length,0);
  assert.match(summary(q),/Réservations sans paiement/);
