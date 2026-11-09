@@ -475,6 +475,22 @@
       "commande_url": "",
       "status": "plus_tard",
       "cover_hidden": true
+    },
+    {
+      "number": 30,
+      "title": "Collector N°3",
+      "slug": "collector-n-3",
+      "available": false,
+      "price": 16.5,
+      "pages": 32,
+      "color": "#704575",
+      "description": "",
+      "cover": "",
+      "excerpts": [],
+      "release_month": "",
+      "isbn": "",
+      "commande_url": "",
+      "status": "plus_tard"
     }
   ],
   "events": [
