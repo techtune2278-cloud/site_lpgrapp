@@ -543,15 +543,6 @@
       "city": "Pontrieux",
       "phone": "02 96 92 95 62",
       "url": "https://librairesenbretagne.com/presentation/librairie_monocle/"
-    },
-    {
-      "slug": "gwalarn",
-      "name": "Librairie Gwalarn",
-      "address": "15 Rue des Chapeliers",
-      "postal_code": "22300",
-      "city": "Lannion",
-      "phone": "02 96 37 40 53",
-      "url": "https://gwalarn.fr/"
     }
   ],
   "subscription": {
