@@ -436,18 +436,6 @@
       "description": ""
     },
     {
-      "number": 30,
-      "title": "Collector n° 3",
-      "slug": "collector-n-3",
-      "available": false,
-      "price": 16.5,
-      "pages": 32,
-      "isbn": "",
-      "color": "#b28f60",
-      "cover": "",
-      "description": ""
-    },
-    {
       "number": 31,
       "title": "François Rabelais",
       "slug": "francois-rabelais",
