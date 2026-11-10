@@ -544,5 +544,21 @@
     "min_books": 3,
     "max_books": 12,
     "max_parcel": 3
-  }
+  },
+  "bonuses": [
+    {
+      "slug": "moliere",
+      "author": "Molière",
+      "title": "Lecture d’un texte sous forme d’interprétation théâtrale pour Molière",
+      "type": "audio",
+      "url": "https://www.lescompagnonsderoute.com/les-bonus-de-la-collection-lpgrapp"
+    },
+    {
+      "slug": "les-fueilles-mortes-chnatees-par-yves-montant",
+      "author": "Pierre Corneille",
+      "title": "Les fueilles mortes chnatées par Yves Montant",
+      "type": "audio",
+      "url": "https://www.ina.fr/ina-eclaire-actu/video/i00004191/yves-montand-les-feuilles-mortes"
+    }
+  ]
 }
