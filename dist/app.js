@@ -21,10 +21,8 @@ if(form){
       enabled=(await response.json()).enabled===true;
     }catch{enabled=false;}
     sendButton.disabled=sending;
-    availability.textContent=enabled?'Votre demande sera envoyée aux auteurs. Votre adresse permet de vous répondre ; elle ne vous inscrit pas à une newsletter.':'Le bouton ouvre votre messagerie avec le message préparé. Envoyez ensuite ce message pour nous le transmettre.';
+    availability.textContent=enabled?'Votre demande sera envoyée aux auteurs. Votre adresse permet de vous répondre ; elle ne vous inscrit pas à une newsletter.':'Le formulaire est temporairement indisponible. Vous pouvez télécharger votre message pour le conserver.';
   }
-  function openEmail(){if(!form.reportValidity())return;const data=new FormData(form);location.href='mailto:contact@lesplusgrandsracontes.fr?subject='+encodeURIComponent(data.get('sujet'))+'&body='+encodeURIComponent(data.get('nom')+' — '+data.get('email')+'\n'+data.get('profil')+'\n\n'+data.get('message'));result.textContent='Votre messagerie s’ouvre : envoyez le message pour nous le transmettre. Votre saisie est conservée.';}
-  document.querySelector('#contact-email')?.addEventListener('click',e=>{e.preventDefault();openEmail();});
   checkContact();
   document.querySelector('#save-draft').addEventListener('click',()=>{
     const data=new FormData(form);
@@ -35,7 +33,7 @@ if(form){
   form.addEventListener('submit',async event=>{
     event.preventDefault();if(sending)return;
     if(!form.reportValidity())return;
-    if(!enabled){openEmail();return;}
+    if(!enabled){await checkContact();if(!enabled){result.textContent=availability.textContent;result.focus();return;}if(sending)return;}
     const data=new FormData(form);const body=Object.fromEntries(data);body.consent=data.get('consent')==='on';body.devis=data.get('devis')==='on';body.startedAt=startedAt;
     sending=true;sendButton.disabled=true;sendButton.textContent='Envoi en cours…';form.setAttribute('aria-busy','true');result.textContent='';
     try{

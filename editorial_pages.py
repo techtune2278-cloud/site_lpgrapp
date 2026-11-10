@@ -20,11 +20,10 @@ def render_site(ctx):
     h = lambda number: '<h2>'+esc(t(number).split('H2 : ', 1)[-1])+'</h2>'
     section = lambda number, body, cls='': '<section class="section copy-section '+cls+'" data-section="'+str(number)+'">'+h(number)+body+'</section>'
     quote = lambda: '<blockquote class="nothomb-quote" data-brief="59">« On n&#x27;est jamais trop petit pour découvrir les plus grands. »<br><cite>—&nbsp;Amélie Nothomb, écrivain</cite></blockquote>'
-    collection_quote = '<section class="section copy-section">'+para("En découvrant notre collection, l’écrivaine Amélie Nothomb a salué notre démarche avec ces mots :")+ '<blockquote class="nothomb-quote">'+esc("« On n’est jamais trop petit pour découvrir les plus grands. »")+'</blockquote></section>'
+    collection_quote = '<section class="section copy-section">'+para("En découvrant notre collection, l’écrivain Amélie Nothomb a salué notre démarche avec ces mots :")+ '<blockquote class="nothomb-quote">'+esc("« On n’est jamais trop petit pour découvrir les plus grands. »")+'</blockquote></section>'
     event_cards, news_cards = editorial_lists(ctx)
     available = [b for b in books if b['available'] and not is_collector(b)]
-    collectors = [b for b in books if is_collector(b)]
-    future = [b for b in books if not b['available'] and not is_collector(b)]
+
     photo_alt = 'Hervélina Vyskoc et Valérie Lemoine, auteurs de la collection, au Festival du Livre de Paris'
     photo = '<div class="photo-placeholder" role="img" aria-label="'+photo_alt+'"><span aria-hidden="true">✳</span><p>Hervélina Vyskoc et Valérie Lemoine</p></div>'
     photo = portraits(root, esc) or photo
@@ -72,10 +71,10 @@ def render_site(ctx):
     # Collection et prévisions de parution, avec les trois numéros Collector.
     catalog = heading('La collection', 'Les plus grands racontés aux plus petits', t(63))+collection_quote
     catalog += '<figure class="subscription-fan"><img src="/assets/photos/collection-livres-eventail.jpeg" alt="Les dix livres parus de la collection disposés en éventail" width="1824" height="1373" loading="lazy"></figure>'
-    catalog += '<section class="section catalog-section"><div class="filter-bar" role="group" aria-label="Filtrer les livres"><button class="filter active" data-filter="available" aria-pressed="true">Disponibles · '+str(len(available))+'</button><button class="filter" data-filter="future" aria-pressed="false">À paraître · '+str(len(future))+'</button><button class="filter" data-filter="all" aria-pressed="false">Toute la collection · '+str(len(available)+len(future))+'</button><label class="search-label">Chercher un auteur<input id="book-search" type="search" placeholder="Hugo, Colette…"></label></div><div class="book-grid catalog">'
-    catalog += ''.join('<div data-book data-status="'+('available' if b['available'] else 'future')+'" data-title="'+esc(b['title'])+'" '+('hidden' if not b['available'] else '')+'>'+cards([b])+'</div>' for b in books if not is_collector(b))
+    catalog += '<section class="section catalog-section"><div class="filter-bar" role="group" aria-label="Filtrer les livres"><button class="filter active" data-filter="available" aria-pressed="true">Disponibles · '+str(sum(b['available'] for b in books))+'</button><button class="filter" data-filter="future" aria-pressed="false">À paraître · '+str(sum(not b['available'] for b in books))+'</button><button class="filter" data-filter="all" aria-pressed="false">Toute la collection · '+str(len(books))+'</button><label class="search-label">Chercher un auteur<input id="book-search" type="search" placeholder="Hugo, Colette…"></label></div><div class="book-grid catalog">'
+    catalog += ''.join('<div data-book data-status="'+('available' if b['available'] else 'future')+'" data-title="'+esc(b['title'])+'" '+('hidden' if not b['available'] else '')+'>'+cards([b])+'</div>' for b in books)
     catalog += '</div><p id="empty-results" hidden>Aucun auteur ne correspond à votre recherche.</p></section>'
-    catalog += '<section class="section copy-section"><h2>Les numéros Collector</h2>'+para("Après chaque série de neuf titres, un numéro Collector vient enrichir la collection. Avec ses 32 pages, il propose de nouveaux jeux et des rubriques interactives pour revenir sur la vie et l'œuvre des écrivains découverts dans les neuf livres précédents.")+para("Le Collector permet également d'approfondir certains thèmes abordés dans les livres, de faire appel à la mémoire des jeunes lecteurs et de prolonger leurs découvertes par de nouvelles activités.")+para("Il fait pleinement partie de la collection : une façon amusante de retrouver les auteurs déjà rencontrés et de poursuivre l'aventure littéraire.")+'<div class="book-grid collectors-grid">'+cards(collectors)+'</div>'+'<p>Prix des Collectors : 16,50 €.</p></section>'
+    catalog += '<section class="section copy-section"><h2>Les numéros Collector</h2>'+para("Après chaque série de neuf titres, un numéro Collector vient enrichir la collection. Avec ses 32 pages, il propose de nouveaux jeux et des rubriques interactives pour revenir sur la vie et l'œuvre des écrivains découverts dans les neuf livres précédents.")+para("Le Collector permet également d'approfondir certains thèmes abordés dans les livres, de faire appel à la mémoire des jeunes lecteurs et de prolonger leurs découvertes par de nouvelles activités.")+para("Il fait pleinement partie de la collection : une façon amusante de retrouver les auteurs déjà rencontrés et de poursuivre l'aventure littéraire.")+'</section>'
     page('livres','La collection de livres jeunesse dès 5 ans',catalog,active='La collection',structured={'@context':'https://schema.org','@type':'BookSeries','name':series,'inLanguage':'fr'})
 
     # Les auteurs : introduction et biographies intégrales à la première personne.
@@ -128,11 +127,11 @@ def render_site(ctx):
     page('offrir',TITLE,subscription_page(ctx),description=DESCRIPTION,active='Abonnement cadeau')
     manufacture=heading('La fabrication','Fabriqué en France, avec soin')+'<figure class="section craft-photo"><img src="/assets/photos/collection-couture-bibliotheque.jpeg" alt="Les livres de la collection avec leurs tranches colorées et leur couture rose" width="546" height="1425" loading="lazy"></figure>'+'<section class="section copy-section"><h2>Pourquoi ces livres valent leur prix</h2>'+''.join(p(n) for n in [471,472,473,474,475,476])+'</section>'
     page('fabrique-en-france','Fabriqué en France, avec soin',manufacture)
-    page('presse','Ils parlent de nous',heading('Presse','Ils parlent de nous')+quote()+'<section class="section copy-section">'+p(100)+press_cards()+'</section>')
+    page('presse','Ils parlent de nous',heading('Presse','Ils parlent de nous')+'<section class="section copy-section">'+para(t(100).split(' Amélie Nothomb a découvert', 1)[0])+para("En découvrant notre collection, l’écrivain Amélie Nothomb a salué notre démarche avec ces mots :")+'<blockquote class="nothomb-quote quote-centered">« On n’est jamais trop petit pour découvrir les plus grands. »</blockquote>'+press_cards()+'</section>')
 
     # Autres parcours déjà livrés, en cohérence avec les termes du brief.
     form=contact_form()
-    page('contact','Contact',heading('Contact','Une question, une invitation à un salon, une commande pour une librairie ou une école ?')+'<section class="section form-section"><p><a href="mailto:contact@lesplusgrandsracontes.fr">contact@lesplusgrandsracontes.fr</a></p>'+form+'</section>')
+    page('contact','Contact',heading('Contact','Une question, une invitation à un salon, une commande pour une librairie ou une école ?')+'<section class="section form-section">'+form+'</section>')
     page('livraison','Livraison et questions sur votre commande',heading('Commander les livres','Livraison et questions pratiques')+shipping_body(settings))
     page('faq','Questions fréquentes',heading('Questions fréquentes','Commander les livres')+shipping_body(settings))
     bookstores='<section class="section copy-section" id="librairies"><h2>Chez votre libraire</h2><div class="bookstore-grid">'
@@ -144,7 +143,18 @@ def render_site(ctx):
     page('ou-nous-trouver','Où nous trouver',heading('Librairies et rencontres','Où nous trouver ?')+'<section class="section copy-section"><h2>Dans notre boutique en ligne</h2>'+link('Acheter les livres sur SumUp',shop)+'</section>'+bookstores+'<section class="section"><h2>Salons et dédicaces</h2><div class="event-grid">'+event_cards+'</div>'+'<div class="empty-panel">'+link('Un projet de rencontre ? Parlez-nous en','/contact/','text')+'</div></section>',active='Où nous trouver ?')
     page('agenda','Où nous trouver',heading('Où nous trouver','Cette page a changé d’adresse.')+link('Où nous trouver','/ou-nous-trouver/'),extra='<meta http-equiv="refresh" content="0;url=/ou-nous-trouver/">')
     page('actualites','Blog et actualités',heading('La collection','Blog et actualités')+'<section class="section copy-section">'+(news_cards or '<p>Retrouvez les prochaines parutions dans la collection et les rencontres dans « Où nous trouver ».</p>')+'</section>')
-    page('bonus','Bonus et activités',heading('Bonus et activités','Les bonus de la collection')+'<section class="section"><article class="bonus-card"><span class="sound-icon" aria-hidden="true">♫</span><div><h2>Molière</h2><p>Lecture d’un texte sous forme d’interprétation théâtrale pour Molière</p>'+link('Accéder aux bonus',settings.get('bonus_page_url') or '/bonus/moliere/','text')+'</div></article></section>')
+    bonuses = ctx['catalog'].get('bonuses')
+    if bonuses is None:
+        bonuses = json.loads((root / 'bonus-default.json').read_text(encoding='utf-8'))
+    bonus_cards = []
+    for bonus in bonuses:
+        url = bonus['url']
+        if not url.startswith('https://'):
+            continue
+        audio = bonus['type'] == 'audio'
+        icon, label = ('♫', 'Écouter le bonus') if audio else ('🎞', 'Voir le film')
+        bonus_cards.append(f'<article class="bonus-card"><span class="sound-icon" aria-hidden="true">{icon}</span><div><h2><strong>{esc(bonus["author"])}</strong></h2><p>{esc(bonus["title"])}</p>{link(label, url, "text")}</div></article>')
+    page('bonus','Bonus et activités',heading('Bonus et activités','Les bonus de la collection')+'<section class="section bonus-list">'+(''.join(bonus_cards) or '<p>Aucun bonus disponible pour le moment.</p>')+'</section>')
     page('bonus/moliere','Molière : le bonus audio',heading('Tome 11','Lecture d’un texte sous forme d’interprétation théâtrale pour Molière')+audio_body(settings,root))
     render_legal(ctx)
     page('administration','Administration privée — Valérie Lemoine',admin_page(ctx))

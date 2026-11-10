@@ -5,11 +5,16 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from publication import Publication
 class V18Tests(unittest.TestCase):
- def test_forty_readable_pages_and_collector_separate(self):
+ def test_forty_readable_pages_and_collector_status(self):
   books=json.loads((ROOT/'content.json').read_text())['books'];catalog=(ROOT/'dist/livres/index.html').read_text()
-  main,collectors=catalog.split('<h2>Les numéros Collector</h2>')
-  self.assertNotIn('id="collector-n-1"',main);self.assertIn('id="collector-n-1"',collectors)
-  self.assertIn('16,50 €',collectors)
+  collectors=[book for book in books if book['slug'].startswith('collector-')]
+  self.assertTrue(collectors)
+  for book in collectors:
+   marker=re.escape('id="'+book['slug']+'"')
+   status='available' if book['available'] else 'future'
+   hidden='' if book['available'] else 'hidden'
+   self.assertEqual(len(re.findall(marker,catalog)),1)
+   self.assertRegex(catalog,r'<div data-book data-status="'+status+r'" data-title="[^"]+" '+hidden+r'><article class="book-card" '+marker)
   for book in books:
    if book['number'] in [1,2,3,4,5,6,7,8,9,11]:
     self.assertEqual(len(book['excerpts']),4)
@@ -23,8 +28,16 @@ class V18Tests(unittest.TestCase):
   catalog=(ROOT/'dist/livres/index.html').read_text();self.assertIn('/contact/?sujet=Parution%20-',catalog)
   self.assertNotIn('/offrir/?reserver=',catalog)
   for page in [home,catalog]:
-   self.assertIn('En découvrant notre collection, l’écrivaine Amélie Nothomb',page)
+   self.assertIn('En découvrant notre collection, l’écrivain Amélie Nothomb',page)
    self.assertIn('On n’est jamais trop petit pour découvrir les plus grands.',page)
+ def test_press_and_contact_changes(self):
+  press=(ROOT/'dist/presse/index.html').read_text()
+  self.assertLess(press.index('tant aimés.'),press.index('l’écrivain Amélie Nothomb'))
+  self.assertLess(press.index('l’écrivain Amélie Nothomb'),press.index('Agrandir la coupure'))
+  self.assertEqual(press.count('« On n’est jamais trop petit pour découvrir les plus grands. »'),1)
+  offer=(ROOT/'dist/offrir/index.html').read_text()
+  self.assertNotIn('Droit de rétractation de 14 jours',offer)
+  self.assertIn('href="/cgv/"',offer)
  def test_indexation_switch_and_confirmed_events(self):
   for path in (ROOT/'dist').rglob('index.html'):self.assertIn('content="noindex,nofollow"',path.read_text())
   with patch.dict(os.environ,{'INDEXATION_ENABLED':'true'}):
@@ -40,8 +53,14 @@ class V18Tests(unittest.TestCase):
    original['books']=[dict(number=99,title='Livre ajouté',slug='livre-ajoute',available=True,price=15,pages=24,color='#704575',description='',cover=photo,excerpts=[photo],commande_url='',release_month='')]
    original['events']=[dict(slug='nouveau-salon',title='Salon ajouté',start_date='2027-06-10',city='Montaut',image=photo,confirmed=True)]
    original['stores']=[]
+   original['bonuses']=[dict(slug='bonus-test',author='Hugo & invités',title='Un film',type='video',url='https://example.org/film')]
    (root/'content.json').write_text(json.dumps(original),encoding='utf-8')
    subprocess.run([sys.executable,'build.py'],cwd=root,check=True,capture_output=True)
+   bonus_page=(root/'dist/bonus/index.html').read_text()
+   self.assertIn('<strong>Hugo &amp; invités</strong>',bonus_page)
+   self.assertIn('🎞',bonus_page)
+   self.assertIn('https://example.org/film',bonus_page)
+   self.assertNotIn('<strong>Molière</strong>',bonus_page)
    for slug in deleted:self.assertFalse((root/'dist/livres'/slug/'index.html').exists())
    for slug in events:self.assertFalse((root/'dist/rencontres'/slug/'index.html').exists())
    for route in ['livres/livre-ajoute','rencontres/nouveau-salon']:

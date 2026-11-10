@@ -17,3 +17,21 @@ test('Suppression de tous les livres, salons et points de vente dans une seule p
 test('Validation atomique : aucun commit si une autre rubrique est invalide ; échec du hook ne masque pas le commit',async()=>{
  let writes=0;const h=createAdminService({env:{...env,ADMIN_VERCEL_DEPLOY_HOOK:'https://api.vercel.com/v1/integrations/deploy/prj_test/test'},fetchImpl:async(url,opt)=>{if(url.startsWith('https://api.vercel.com/'))throw Error('injoignable');if(opt.method==='GET')return {ok:true,json:async()=>({sha:'old',content:Buffer.from('{"books":[],"events":[]}').toString('base64')})};writes++;return {ok:true,json:async()=>({content:{sha:'new'},commit:{sha:'abc'}})};}});const cookie=await auth(h);const invalid=await h({method:'POST',headers:cookie,body:{action:'save',sha:'old',sections:{events:[],books:[{number:1}]}}});assert.equal(invalid.status,400);assert.equal(writes,0);const r=await h({method:'POST',headers:cookie,body:{action:'save',sha:'old',sections:{events:[]}}});assert.equal(r.status,200);assert.equal(writes,1);assert.equal(r.data.deployment,'hook_failed');assert.ok(!JSON.stringify(r).includes('prj_test'));
 });
+test('Un bonus peut être chargé, publié ou supprimé sans modifier les livres',async()=>{
+ let content={books:[{title:'Conservé'}]};
+ const h=createAdminService({env,fetchImpl:async(url,opt)=>{
+  if(opt.method==='GET')return {ok:true,json:async()=>({sha:'version',content:Buffer.from(JSON.stringify(content)).toString('base64')})};
+  content=JSON.parse(Buffer.from(JSON.parse(opt.body).content,'base64'));return {ok:true,json:async()=>({content:{sha:'version'}})};
+ }});
+ const headers=await auth(h);
+ const load=()=>h({method:'GET',headers});
+ const save=value=>h({method:'POST',headers,body:{action:'save',sha:'version',sections:{bonuses:value}}});
+ assert.equal((await load()).data.content.bonuses[0].author,'Molière');
+ const bonus={slug:'hugo',author:'Victor Hugo',title:'Lecture',type:'audio',url:'https://example.org/lecture.mp3'};
+ assert.equal((await save([{...bonus,url:'javascript:alert(1)'}])).status,400);
+ assert.equal((await save([bonus])).status,200);
+ assert.deepEqual((await load()).data.content.bonuses,[bonus]);
+ assert.equal((await save([])).status,200);
+ assert.deepEqual((await load()).data.content.bonuses,[]);
+ assert.deepEqual(content.books,[{title:'Conservé'}]);
+});

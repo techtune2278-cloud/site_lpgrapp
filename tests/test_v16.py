@@ -30,9 +30,12 @@ class V16Tests(unittest.TestCase):
   future['release_month']='2027-02';prepare_catalog(books);self.assertTrue(future['subscription_payable'])
   future['release_month']='2027-99'
   with self.assertRaises(ValueError):prepare_catalog(books)
- def test_home_purchase_path_and_email(self):
+ def test_home_purchase_path_and_public_contact(self):
   html=(ROOT/'dist/index.html').read_text();p=Reader();p.feed(html)
   self.assertTrue(any(tag=='a' and attrs.get('href')=='/livres/' for tag,attrs in p.attrs))
   self.assertIn('Offrir un abonnement',html);self.assertIn('Acheter',html)
-  for route in ['','contact','mentions-legales','cgv']:
+  for route in ['','contact']:
+   self.assertNotIn('contact@lesplusgrandsracontes.fr',(ROOT/'dist'/route/'index.html').read_text())
+  self.assertIn('action="/api/contact"',(ROOT/'dist/contact/index.html').read_text())
+  for route in ['mentions-legales','cgv']:
    self.assertIn('contact@lesplusgrandsracontes.fr',(ROOT/'dist'/route/'index.html').read_text())

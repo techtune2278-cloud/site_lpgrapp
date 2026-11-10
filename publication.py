@@ -48,7 +48,7 @@ class Publication:
         self.media=MediaPipeline(root);self.media.icons();self.pages=[]
         self.book_by_route={'livres/'+b['slug']:b for b in books}
         self.graph=[
-         {'@type':'Organization','@id':base+'/#organization','name':'Sur le Chemin des Arts','url':base+'/', 'logo':{'@type':'ImageObject','url':base+'/apple-touch-icon.png'},'address':{'@type':'PostalAddress','streetAddress':'22 Rue de Lassun','postalCode':'64800','addressLocality':'Montaut','addressCountry':'FR'},'email':'contact@lesplusgrandsracontes.fr','identifier':'SIRET 953 755 477 00015','sameAs':['https://www.lescompagnonsderoute.com/','https://www.instagram.com/lpgrapp/']},
+         {'@type':'Organization','@id':base+'/#organization','name':'Sur le Chemin des Arts','url':base+'/', 'logo':{'@type':'ImageObject','url':base+'/apple-touch-icon.png'},'address':{'@type':'PostalAddress','streetAddress':'22 Rue de Lassun','postalCode':'64800','addressLocality':'Montaut','addressCountry':'FR'},'identifier':'SIRET 953 755 477 00015','sameAs':['https://www.lescompagnonsderoute.com/','https://www.instagram.com/lpgrapp/']},
          {'@type':'WebSite','@id':base+'/#website','url':base+'/','name':SERIES,'inLanguage':'fr-FR','publisher':{'@id':base+'/#organization'}},
          {'@type':'BookSeries','@id':base+'/#collection','name':SERIES,'inLanguage':'fr','publisher':{'@id':base+'/#organization'}},
          {'@type':'Person','@id':base+'/auteurs/#hervelina-vyskoc','name':'Hervélina Vyskoc','jobTitle':['Comédienne','Écrivain','Professeur de théâtre'],'worksFor':{'@id':base+'/#organization'}},

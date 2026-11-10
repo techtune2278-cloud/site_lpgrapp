@@ -52,7 +52,7 @@ def contact_form(professional=False):
 <label class="full contact-consent"><input name="consent" type="checkbox" required> <span>J’accepte que les informations saisies soient utilisées pour répondre à ma demande. <a href="/confidentialite/">Confidentialité</a>.</span></label>
 <p class="full muted" id="contact-availability" role="status">Vérification de la disponibilité du formulaire…</p>
 <button class="button primary" type="submit" id="send-message">Envoyer mon message ↗</button>
-<a class="button light" id="contact-email" href="mailto:contact@lesplusgrandsracontes.fr">Envoyer par ma messagerie ↗</a><button class="button light" type="button" id="save-draft">Télécharger mon message ↓</button>
+<button class="button light" type="button" id="save-draft">Télécharger mon message ↓</button>
 <div id="message-result" class="full" role="status" aria-live="polite" tabindex="-1"></div>
 <noscript><p class="notice full">Activez JavaScript pour utiliser le formulaire.</p></noscript>
 </form>'''
