@@ -8,12 +8,14 @@ class V18Tests(unittest.TestCase):
  def test_forty_readable_pages_and_collector_status(self):
   books=json.loads((ROOT/'content.json').read_text())['books'];catalog=(ROOT/'dist/livres/index.html').read_text()
   collectors=[book for book in books if book['slug'].startswith('collector-')]
-  self.assertTrue(collectors)
+  self.assertEqual({b['slug']: b['number'] for b in collectors if b['slug'] in {'collector-n-2','collector-n-3'}}, {'collector-n-2': 20, 'collector-n-3': 30})
+  regular, dedicated = catalog.split('<h2>Les numéros Collector</h2>', 1)
   for book in collectors:
    marker=re.escape('id="'+book['slug']+'"')
    status='available' if book['available'] else 'future'
    hidden='' if book['available'] else 'hidden'
-   self.assertEqual(len(re.findall(marker,catalog)),1)
+   self.assertNotRegex(regular,marker)
+   self.assertEqual(len(re.findall(marker,dedicated)),1)
    self.assertRegex(catalog,r'<div data-book data-status="'+status+r'" data-title="[^"]+" '+hidden+r'><article class="book-card" '+marker)
   for book in books:
    if book['number'] in [1,2,3,4,5,6,7,8,9,11]:
@@ -51,7 +53,7 @@ class V18Tests(unittest.TestCase):
    import base64
    photo='data:image/jpeg;base64,'+base64.b64encode(source).decode()
    original['books']=[dict(number=99,title='Livre ajouté',slug='livre-ajoute',available=True,price=15,pages=24,color='#704575',description='',cover=photo,excerpts=[photo],commande_url='',release_month='')]
-   original['events']=[dict(slug='nouveau-salon',title='Salon ajouté',start_date='2027-06-10',city='Montaut',image=photo,confirmed=True)]
+   original['events']=[dict(slug='nouveau-marche',title='Marché ajouté',kind='marche',start_date='2027-06-10',city='Montaut',image=photo,confirmed=True)]
    original['stores']=[]
    original['bonuses']=[dict(slug='bonus-test',author='Hugo & invités',title='Un film',type='video',url='https://example.org/film')]
    (root/'content.json').write_text(json.dumps(original),encoding='utf-8')
@@ -63,9 +65,10 @@ class V18Tests(unittest.TestCase):
    self.assertNotIn('<strong>Molière</strong>',bonus_page)
    for slug in deleted:self.assertFalse((root/'dist/livres'/slug/'index.html').exists())
    for slug in events:self.assertFalse((root/'dist/rencontres'/slug/'index.html').exists())
-   for route in ['livres/livre-ajoute','rencontres/nouveau-salon']:
+   for route in ['livres/livre-ajoute','rencontres/nouveau-marche']:
     page=(root/'dist'/route/'index.html').read_text();self.assertIn('/assets/optimized/',page);self.assertNotIn('data:image/',page)
    public=json.loads((root/'dist/content.json').read_text());self.assertTrue(public['books'][0]['cover'].startswith('/assets/optimized/'))
+   self.assertIn('Marché ajouté',(root/'dist/ou-nous-trouver/index.html').read_text())
    self.assertNotIn('La Librairie Monocle',(root/'dist/ou-nous-trouver/index.html').read_text())
 
    original['books'][0].update(cover='',cover_hidden=True,excerpts=[])

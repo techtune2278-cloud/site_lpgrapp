@@ -35,3 +35,21 @@ test('Un bonus peut être chargé, publié ou supprimé sans modifier les livres
  assert.deepEqual((await load()).data.content.bonuses,[]);
  assert.deepEqual(content.books,[{title:'Conservé'}]);
 });
+test('Un marché exige un nom, une date et une ville ; un ancien brouillon ne bloque pas les autres',async()=>{
+ let content={events:[{slug:'ancien',title:'Marché sans date',city:'Runan',start_date:''}]};
+ const h=createAdminService({env,fetchImpl:async(url,opt)=>{
+  if(opt.method==='GET')return {ok:true,json:async()=>({sha:'v',content:Buffer.from(JSON.stringify(content)).toString('base64')})};
+  content=JSON.parse(Buffer.from(JSON.parse(opt.body).content,'base64'));return {ok:true,json:async()=>({content:{sha:'v'}})};
+ }});
+ const headers=await auth(h);
+ const draft=content.events[0];
+ const market={slug:'nouveau-marche',kind:'marche',title:'Marché de Noël',city:'Runan',start_date:'2026-12-12'};
+ const save=event=>h({method:'POST',headers,body:{action:'save',sha:'v',sections:{events:[draft,event]}}});
+ const incomplete=await save({...market,start_date:''});
+ assert.equal(incomplete.status,400);
+ assert.match(incomplete.data.error,/date de début/);
+ assert.equal((await save({...market,end_date:'2026-12-11'})).status,400);
+ assert.deepEqual(content.events,[draft]);
+ assert.equal((await save(market)).status,200);
+ assert.deepEqual(content.events,[draft,market]);
+});
