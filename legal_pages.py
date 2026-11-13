@@ -1,4 +1,5 @@
 """Publication des documents fournis, avec retrait des notes internes à compléter."""
+from audience import enabled as audience_enabled, PRIVACY as AUDIENCE_PRIVACY
 import json,re,html
 from pathlib import Path
 MED='Centre d’Affaires Stéphanois, Immeuble l’Horizon – Esplanade de France, 3 rue J. Constant Milleret, 42000 Saint-Étienne'
@@ -38,10 +39,23 @@ Signature (uniquement sur papier) : .....................................
 """
     for name,route,title in [('Mentions légales.docx','mentions-legales','Mentions légales'),('Conditions générales de vente.docx','cgv','Conditions générales de vente'),('Politique de confidentialité.docx','confidentialite','Politique de confidentialité')]:
         lines=[clean_line(x) for x in docs[name] if x.strip()];lines=[x for x in lines if x];body=heading('Informations',title)+'<section class="section copy-section">';public=[]
+        skip_cookie_draft = False
         for i,line in enumerate(lines):
             if i==0:continue
             if line.startswith('ANNEXE —'):break
             if '[numéro]' in line:continue
+            if route=='confidentialite' and audience_enabled(ctx['SITE_URL']):
+                if line.startswith("Données de navigation et cookies"):
+                    line = 'Données de navigation : la durée de conservation des données de Google Analytics dépend du réglage de la propriété Analytics. Les durées des cookies et du choix de consentement sont indiquées ci-dessous.'
+                if line.startswith('7. Cookies'):
+                    skip_cookie_draft = True
+                    public.extend([line, *AUDIENCE_PRIVACY])
+                    body+='<h2 id="cookies">'+esc(line)+'</h2>'+''.join('<p>'+esc(text)+'</p>' for text in AUDIENCE_PRIVACY)
+                    continue
+                if line.startswith('9. Quels sont vos droits'):
+                    skip_cookie_draft = False
+                if skip_cookie_draft:
+                    continue
             public.append(line)
             tag='h2' if re.match(r'^(ARTICLE \d+|\d+\.|[A-D]\. )',line) else 'p'
             if line.startswith('Version du'):tag='p'
