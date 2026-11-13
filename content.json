@@ -522,11 +522,16 @@
     },
     {
       "slug": "nouvelle-rencontre-1794335228288",
-      "title": "Nouvelle rencontre",
-      "start_date": "",
-      "city": "",
+      "title": "Marché de Noël",
+      "start_date": "2026-11-15",
+      "city": "Nay",
       "place": "",
-      "confirmed": true
+      "confirmed": true,
+      "kind": "marche",
+      "end_date": "2026-11-15",
+      "street": "",
+      "postal_code": "",
+      "description": ""
     }
   ],
   "stores": [
