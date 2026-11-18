@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 from urllib.parse import urljoin
 from editorial_pages import render_site
+from bonus_audio import publish_audio
 from audience import markup as audience_markup
 from image_assets import apply_book_images
 from page_helpers import external_links
@@ -23,7 +24,7 @@ settings['_subscription']=catalog.get('subscription',{'min_books':3,'max_books':
 paragraphs = json.loads((ROOT / 'textes-brief.json').read_text(encoding='utf-8'))['paragraphs']
 SUMUP = settings['shop_url']
 SITE_URL = site_url(settings)
-VERSION = '1.8.8'
+VERSION = '1.8.9'
 SERIES = 'Les plus grands racontés aux plus petits'
 
 
@@ -109,6 +110,7 @@ for book in books:
             if image:book[key]=image['sizes'][-1]['src']
     if book.get('excerpts'):
         book['excerpts']=[publication.media.image(src)['sizes'][-1]['src'] if src.startswith('data:image/') and publication.media.image(src) else src for src in book['excerpts']]
+publish_audio(ROOT, OUT)
 render_site(globals())
 page('404', 'Page introuvable', heading('Erreur 404', 'Cette page est introuvable')+link('Retrouver les livres', '/livres/'))
 (OUT / '404.html').write_text((OUT / '404/index.html').read_text(encoding='utf-8'), encoding='utf-8')

@@ -5,6 +5,7 @@ from image_assets import portraits, press_images
 from content_features import excerpts, editorial_lists
 from legal_pages import render_legal
 from admin_page import admin_page
+from bonus_audio import render_bonus
 from subscription_content import subscription_page, TITLE, DESCRIPTION, H1, GUARANTEES, INCLUDED, NEXT, month_label
 from site_features import book_order, buying_help, offer_order, contact_form, shipping_body, audio_body
 
@@ -149,15 +150,8 @@ def render_site(ctx):
     bonuses = ctx['catalog'].get('bonuses')
     if bonuses is None:
         bonuses = json.loads((root / 'bonus-default.json').read_text(encoding='utf-8'))
-    bonus_cards = []
-    for bonus in bonuses:
-        url = bonus['url']
-        if not url.startswith('https://'):
-            continue
-        audio = bonus['type'] == 'audio'
-        icon, label = ('♫', 'Écouter le bonus') if audio else ('🎞', 'Voir le film')
-        bonus_cards.append(f'<article class="bonus-card"><span class="sound-icon" aria-hidden="true">{icon}</span><div><h2><strong>{esc(bonus["author"])}</strong></h2><p>{esc(bonus["title"])}</p>{link(label, url, "text")}</div></article>')
-    page('bonus','Bonus et activités',heading('Bonus et activités','Les bonus de la collection')+'<section class="section bonus-list">'+(''.join(bonus_cards) or '<p>Aucun bonus disponible pour le moment.</p>')+'</section>')
+    bonus_cards = [render_bonus(bonus, root) for bonus in bonuses]
+    page('bonus','Bonus et activités',heading('Bonus et activités','Les bonus de la collection')+'<section class="section bonus-list">'+(''.join(bonus_cards) or '<p>Aucun bonus disponible pour le moment.</p>')+'</section>',extra='<script src="/bonus-audio.js?v='+ctx['VERSION']+'" defer></script>')
     page('bonus/moliere','Molière : le bonus audio',heading('Tome 11','Lecture d’un texte sous forme d’interprétation théâtrale pour Molière')+audio_body(settings,root))
     render_legal(ctx)
     page('administration','Administration privée — Valérie Lemoine',admin_page(ctx))
